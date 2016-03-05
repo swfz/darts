@@ -6,16 +6,20 @@ require 'tapp'
 
 # datafile format
 # score
-# { 2016-03-01 => [ 500, 400, 450... ]}
-# { 2016-03-02 => [ 500, 400, 450... ]}
+# {
+#   2016-03-01 => [ 500, 400, 450... ],
+#   2016-03-02 => [ 500, 400, 450... ]
+# }
 # award
-# { 2016-03-01 => { ROWTON => 3, HIGHTON => 2, ...} }
-# { 2016-03-02 => { ROWTON => 3, HIGHTON => 2, ...} }
+# {
+#   2016-03-01 => { ROWTON => 3, HIGHTON => 2, ...},
+#   2016-03-02 => { ROWTON => 3, HIGHTON => 2, ...}
+# }
 
 class DataFile
   def initialize(classname)
-    @game_file  = 'custom/' + classname + '.json'
-    @award_file = 'custom/award.json'
+    @game_file  = classname + '.json'
+    @award_file = 'award.json'
   end
   attr_accessor :game_file, :award_file
 
