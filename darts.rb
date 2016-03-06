@@ -56,10 +56,13 @@ class Game
     self.class.to_s.split('::').last.downcase
   end
 
-  def update_award( award )
+  def update_award( awards )
     @award_data[ @today ] ||= {}
-    @award_data[ @today ][ award ] ||= 0
-    @award_data[ @today ][ award ] += 1
+
+    awards.each{|award|
+      @award_data[ @today ][ award ] ||= 0
+      @award_data[ @today ][ award ] += 1
+    }
   end
 
   def update_score( score )
@@ -83,7 +86,7 @@ end
 class Round
   def initialize(points_str)
     @points = []
-    @award  = nil
+    @awards = []
     @score  = 0
     points_str.split(" ").each{|point_str|
       # triple double single bull doublebull
@@ -96,18 +99,25 @@ class Round
   # points(eg)
   # { area => 20, scale => t,   point => 60 } 20T
   # { area => 50, scale => d,   point => 50 } DBULL
-  # { area => 50, scale => s,   point => 50 } SBULL
+  # { area => 50, scale => nil, point => 50 } SBULL
   # { area => 19, scale => nil, point => 19 } Single 19
 
-  def get_award
-    return 'TON80'           if @points.all? {|p| p["area"].to_i == 20 and p["scale"] == 't'}
-    return 'THREEINTHEBLACK' if @points.all? {|p| p["area"].to_i == 50 and p["scale"] == 'd'}
-    return 'HATTRICK'        if @points.all? {|p| p["area"].to_i == 50 }
-    return 'HIGHTON'         if @points.map{|r| r["point"] }.inject(:+) >= 151
-    return 'ROWTON'          if @points.map{|r| r["point"] }.inject(:+) >= 100
+  def get_awards
+    @points.each{|p|
+      @awards.push('D-BULL') if p["area"].to_i == 50 and p["scale"] == 'd'
+      @awards.push('S-BULL') if p["area"].to_i == 50 and p["scale"].nil?
+    }
     # areaが全て同じ、かつ三投ともdoubleかtripleである
-    return 'THREEINABED'     if @points.map{|r| r["area"] }.uniq.count == 1 and @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'}
-    return nil
+    @awards.push('THREEINABED')     if @points.map{|r| r["area"] }.uniq.count == 1 and @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'}
+
+    @awards.push('TON80') and return @awards    if @points.all? {|p| p["area"].to_i == 20 and p["scale"] == 't'}
+    @awards.push('THREEINTHEBLACK') if @points.all? {|p| p["area"].to_i == 50 and p["scale"] == 'd'}
+    @awards.push('HATTRICK') and return @awards if @points.all? {|p| p["area"].to_i == 50 }
+    @awards.push('HIGHTON') and return @awards  if @points.map{|r| r["point"] }.inject(:+) >= 151
+    @awards.push('ROWTON') if @points.map{|r| r["point"] }.inject(:+) >= 101
+
+    @awards.tapp
+    return @awards
   end
 
   def round_score
@@ -134,13 +144,13 @@ class Countup < Game
     while points_str = STDIN.gets
       round = Round.new( points_str )
 
-      award = round.get_award
-      puts "Round%d: %d"%([self.current_round+1,round.round_score])
-      if award
-        puts award
-        self.update_award( award )
-      end
+      awards = round.get_awards
+      display_award = awards.reject{|award| award == 'S-BULL' or award == 'D-BULL' }
 
+      puts "Round%d: %d"%([self.current_round+1,round.round_score])
+      puts display_award if display_award
+
+      self.update_award( awards )
       self.score += round.round_score
       self.current_round += 1
       break if self.current_round >= self.last_round
