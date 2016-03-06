@@ -3,6 +3,7 @@
 require 'json'
 require 'date'
 require 'tapp'
+require 'highline'
 
 # datafile format
 # score
@@ -76,8 +77,6 @@ class Game
   end
 
   def write_data
-    @game_data.tapp
-    @award_data.tapp
     @datafile.write( @datafile.game_file, @game_data )
     @datafile.write( @datafile.award_file, @award_data )
   end
@@ -116,7 +115,6 @@ class Round
     @awards.push('HIGHTON') and return @awards  if @points.map{|r| r["point"] }.inject(:+) >= 151
     @awards.push('ROWTON') if @points.map{|r| r["point"] }.inject(:+) >= 101
 
-    @awards.tapp
     return @awards
   end
 
@@ -137,31 +135,37 @@ end
 class Countup < Game
   def initialize
     super
-    @last_round = 2
+    @last_round = 8
   end
 
   def start
+    h = HighLine.new
+
     while points_str = STDIN.gets
       round = Round.new( points_str )
 
       awards = round.get_awards
       display_award = awards.reject{|award| award == 'S-BULL' or award == 'D-BULL' }
 
-      puts "Round%d: %d"%([self.current_round+1,round.round_score])
-      puts display_award if display_award
+      puts h.color("#{display_award.first.to_s}", :yellow ) if display_award
 
       self.update_award( awards )
       self.score += round.round_score
       self.current_round += 1
+
+      puts "Round%d: %d"%([self.current_round,round.round_score])
+      puts h.color("Total: %d"%([self.score]), :green)
+
       break if self.current_round >= self.last_round
     end
   end
 end
 
+h = HighLine.new
 game = Countup.new
 game.read_data
 game.start
 game.update_score( game.score )
 game.write_data
-puts "Total Score: %d"%(game.score)
+puts h.color("Total Score: %d"%(game.score), :red )
 
