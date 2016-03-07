@@ -18,20 +18,21 @@ require 'highline'
 # }
 
 class DataFile
-  def initialize(classname)
-    @game_file  = classname + '.json'
-    @award_file = 'award.json'
+  def initialize
+    @data_file = 'data.json'
+    @datas     = self.read(@data_file)
   end
-  attr_accessor :game_file, :award_file
+  attr_accessor :data_file, :datas
 
   def write(file,json)
+    @datas.push(json)
     open(file, 'w') do |io|
-      JSON.dump(json, io)
+      JSON.dump(@datas, io)
     end
   end
 
   def read(file)
-    return {} if !File.exist?(file)
+    return [] if !File.exist?(file)
 
     json = open(file) do |io|
       JSON.load(io)
@@ -46,39 +47,32 @@ class Game
     @last_round    = 20
     @current_round = 0
     @score         = 0
-    @datafile      = DataFile.new(self.classname)
-    @award_data    = {}
+    @file_obj      = DataFile.new
     @game_data     = {}
-    @today         = Date.today.strftime("%Y-%m-%d")
   end
-  attr_accessor :last_round, :current_round, :score, :datafile, :award_data, :game_data
+  attr_accessor :last_round, :current_round, :score, :file_obj, :game_data
 
   def classname
     self.class.to_s.split('::').last.downcase
   end
 
   def update_award( awards )
-    @award_data[ @today ] ||= {}
 
+    @game_data["award"] ||= {}
     awards.each{|award|
-      @award_data[ @today ][ award ] ||= 0
-      @award_data[ @today ][ award ] += 1
+      @game_data["award"][ award ] ||= 0
+      @game_data["award"][ award ] += 1
     }
   end
 
   def update_score( score )
-    @game_data[ @today ] ||= []
-    @game_data[ @today ].push( score )
-  end
-
-  def read_data
-    @game_data  = @datafile.read( @datafile.game_file )
-    @award_data = @datafile.read( @datafile.award_file )
+    @game_data["date"]  = Date.today.strftime("%Y-%m-%d")
+    @game_data["game"]  = self.classname
+    @game_data["score"] = score
   end
 
   def write_data
-    @datafile.write( @datafile.game_file, @game_data )
-    @datafile.write( @datafile.award_file, @award_data )
+    @file_obj.write( @file_obj.data_file, @game_data )
   end
 end
 
@@ -163,7 +157,6 @@ end
 
 h = HighLine.new
 game = Countup.new
-game.read_data
 game.start
 game.update_score( game.score )
 game.write_data
