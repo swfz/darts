@@ -5,18 +5,6 @@ require 'date'
 require 'tapp'
 require 'highline'
 
-# datafile format
-# score
-# {
-#   2016-03-01 => [ 500, 400, 450... ],
-#   2016-03-02 => [ 500, 400, 450... ]
-# }
-# award
-# {
-#   2016-03-01 => { ROWTON => 3, HIGHTON => 2, ...},
-#   2016-03-02 => { ROWTON => 3, HIGHTON => 2, ...}
-# }
-
 class DataFile
   def initialize
     @data_file = 'data.json'
