@@ -10,87 +10,153 @@ html
     link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en"
     link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"
 
-    link href='//fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'
-    link href='https://code.getmdl.io/1.1.2/material.indigo-pink.min.css' rel='stylesheet' type='text/css'
-    script src='https://code.getmdl.io/1.1.2/material.min.js' type='text/javascript'
-    link rel="stylesheet" href="/stylesheets/styles.css"
+    / gentelella
+    link[href="/stylesheets/bootstrap.min.css" rel="stylesheet"]
+    link[href="/fonts/css/font-awesome.min.css" rel="stylesheet"]
+    link[href="/stylesheets/animate.min.css" rel="stylesheet"]
+    link[href="/stylesheets/custom.css" rel="stylesheet"]
+    link[href="/stylesheets/blue.css" rel="stylesheet"]
+    link[href="/stylesheets/floatexamples.css" rel="stylesheet" type="text/css"]
+
+    script[src="/javascripts/jquery.min.js"]
+    script[src="/javascripts/nprogress.js"]
 
     / == stylesheet_link_tag :site
     == javascript_include_tag  "all"
 
-    / C3.js
-    script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js" type="text/javascript"
-    == javascript_include_tag  "c3.min"
-    link rel="stylesheet" href="/stylesheets/c3.min.css"
+  body.nav-md
+    .container.body
+      .main_container
+        .col-md-3.left_col
+          .left_col.scroll-view
+            .navbar.nav_title[style="border: 0;"]
+              a.site_title[href="/"]
+              i.fa.fa-paw
+              span
+                | Darts!
+            .clearfix
+            .profile
+              .profile_pic
+                img.img-circle.profile_img[src="images/img.png" alt="..."]
+              .profile_info
+                h2
+                  | Welcome
+            br
+            #sidebar-menu.main_menu_side.hidden-print.main_menu
+              .menu_section
+                h3
+                  | Games
+                ul.nav.side-menu
+                  li
+                    a
+                      i.fa.fa-home
+                      |  Home
+                      span.fa.fa-chevron-down
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="/"]
+                          | Dashboard
+                  li
+                    a
+                      i.fa.fa-line-chart
+                      |  CountUp
+                      span.fa.fa-chevron-down
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="countup"]
+                          | CountUp
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="cricketcountup"]
+                          | CricketCountUp
+                  li
+                    a
+                      i.fa.fa-dot-circle-o
+                      |  01
+                      span.fa.fa-chevron-down
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="zeroone"]
+                          | 301
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="zeroone"]
+                          | 501
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="zeroone"]
+                          | 701
+                  li
+                    a
+                      i.fa.fa-pie-chart
+                      |  Cricket
+                      span.fa.fa-chevron-down
+                    ul.nav.child_menu[style="display: none"]
+                      li
+                        a[href="cricket"]
+                          | Cricket
 
-  body class="#{page_classes}"
-    .demo-layout.mdl-layout.mdl-js-layout.mdl-layout--fixed-drawer.mdl-layout--fixed-header
-      header.demo-header.mdl-layout__header.mdl-color--grey-100.mdl-color-text--grey-600
-        .mdl-layout__header-row
-          span.mdl-layout-title
-            | Darts Metrics
-          .mdl-layout-spacer
-          .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
-            label.mdl-button.mdl-js-button.mdl-button--icon[for="search"]
-              i.material-icons
-                | search
-            .mdl-textfield__expandable-holder
-              input#search.mdl-textfield__input[type="text"]
-              label.mdl-textfield__label[for="search"]
-                | Enter your query...
-          button#hdrbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
-            i.material-icons
-              | more_vert
-          ul.mdl-menu.mdl-js-menu.mdl-js-ripple-effect.mdl-menu--bottom-right[for="hdrbtn"]
-            li.mdl-menu__item
-              | About
-            li.mdl-menu__item
-              | Contact
-            li.mdl-menu__item
-              | Legal information
-      .demo-drawer.mdl-layout__drawer.mdl-color--blue-grey-900.mdl-color-text--blue-grey-50
-        header.demo-drawer-header
-          img.demo-avatar[src="images/user.jpg"]
-          .demo-avatar-dropdown
-            span
-              | hello@example.com
-            .mdl-layout-spacer
-            button#accbtn.mdl-button.mdl-js-button.mdl-js-ripple-effect.mdl-button--icon
-              i.material-icons[role="presentation"]
-                | arrow_drop_down
-              span.visuallyhidden
-                | Accounts
-            ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect[for="accbtn"]
-              li.mdl-menu__item
-                | hello@example.com
-              li.mdl-menu__item
-                | info@example.com
-              li.mdl-menu__item
-                i.material-icons
-                  | add
-                | Add another account...
-        nav.demo-navigation.mdl-navigation.mdl-color--blue-grey-800
-          a.mdl-navigation__link[href="/"]
-            i.mdl-color-text--blue-grey-400.material-icons[role="presentation"]
-              | multiline_chart
-            | Home
-          a.mdl-navigation__link[href="countup"]
-            i.mdl-color-text--blue-grey-400.material-icons[role="presentation"]
-              | show_chart
-            | CountUp
-          a.mdl-navigation__link[href="crcket_countup"]
-            i.mdl-color-text--blue-grey-400.material-icons[role="presentation"]
-              | pie_chart_outlined
-            | CricketCountUp
-          a.mdl-navigation__link[href="zeroone"]
-            i.mdl-color-text--blue-grey-400.material-icons[role="presentation"]
-              | looks_one
-            | 01
-          a.mdl-navigation__link[href="cricket"]
-            i.mdl-color-text--blue-grey-400.material-icons[role="presentation"]
-              | pie_chart
-            | Cricket
+            .sidebar-footer.hidden-small
+              a[data-toggle="tooltip" data-placement="top" title="Settings"]
+                span.glyphicon.glyphicon-cog[aria-hidden="true"]
+              a[data-toggle="tooltip" data-placement="top" title="FullScreen"]
+                span.glyphicon.glyphicon-fullscreen[aria-hidden="true"]
+              a[data-toggle="tooltip" data-placement="top" title="Lock"]
+                span.glyphicon.glyphicon-eye-close[aria-hidden="true"]
+              a[data-toggle="tooltip" data-placement="top" title="Logout"]
+                span.glyphicon.glyphicon-off[aria-hidden="true"]
+        .top_nav
+          .nav_menu
+            nav[role="navigation"]
+              .nav.toggle
+                a#menu_toggle
+                  i.fa.fa-bars
+              ul.nav.navbar-nav.navbar-right
+                li
+                  a.user-profile.dropdown-toggle[href="javascript:;" data-toggle="dropdown" aria-expanded="false"]
+                    span.fa.fa-angle-down
+                  ul.dropdown-menu.dropdown-usermenu.animated.fadeInDown.pull-right
+                    li
+                      a[href="javascript:;"]
+                        |  Profile
+                    li
+                      a[href="javascript:;"]
+                        span.badge.bg-red.pull-right
+                          | 50%
+                        span
+                          | Settings
+                    li
+                      a[href="javascript:;"]
+                        | Help
+                    li
+                      a[href="login.html"]
+                        i.fa.fa-sign-out.pull-right
+                        |  Log Out
+                li.dropdown[role="presentation"]
+                  a.dropdown-toggle.info-number[href="javascript:;" data-toggle="dropdown" aria-expanded="false"]
+                  ul#menu1.dropdown-menu.list-unstyled.msg_list.animated.fadeInDown[role="menu"]
+                    li
+                      a
+                        span.image
+                          img[src="images/img.png" alt="Profile Image"]
+                        span
+                          span
+                            | John Smith
+                          span.time
+                            | 3 mins ago
+                        span.message
+                          |  Film festivals used to be do-or-die moments for movie makers. They were where..._
 
-      main.mdl-layout__content.mdl-color--grey-100
-        .mdl-grid.demo-content
-          == yield
+        == yield
+
+    script[src="/javascripts/bootstrap.min.js"]
+    script[type="text/javascript" src="/javascripts/gauge.min.js"]
+    script[type="text/javascript" src="/javascripts/gauge_demo.js"]
+    script[src="/javascripts/bootstrap-progressbar.min.js"]
+    script[src="/javascripts/jquery.nicescroll.min.js"]
+    script[src="/javascripts/icheck.min.js"]
+    script[type="text/javascript" src="/javascripts/moment.min.js"]
+    script[type="text/javascript" src="/javascripts/daterangepicker.js"]
+    script[src="/javascripts/custom.js"]
+    script[src="/javascripts/green.js"]
+    script[src="/javascripts/echarts-all.js"]

@@ -1,68 +1,98 @@
----
-title: CountUp
----
+.right_col[role="main"]
+  div
+    .page-title
+      h3
+        | CountUp
+        small
+          | CountUp Scores
+    .clearfix
+    .row
+      .col-md-8.col-sm-8.col-xs-12
+        .x_panel
+          .x_title
+            h2
+              | Scatter Graph
+            ul.nav.navbar-right.panel_toolbox
+              li
+                a[href="#"]
+                  i.fa.fa-chevron-up
+                li.dropdown
+                  a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                    i.fa.fa-wrench
+                  ul.dropdown-menu[role="menu"]
+                    li
+                      a[href="#"]
+                        | dummy
+                li
+                  a[href="#"]
+                    i.fa.fa-close
+              .clearfix
+            .x_content
+              #echart_scatter[style="height:350px;"]
 
-#max-score
-  p 最高点:
-  = data.darts.max_by { |r| r.score }.score
 
-  #average-score
-    p 直近3ゲーム
-    - recent = data.darts.reverse.take(3).select { |r| r.game == 'countup' }
-    - for row in recent
-      p
-      = row.score
 
-    p 平均
-    = recent.map{ |r| r.score }.inject(:+) / recent.length
+    #max-score
+      p 最高点:
+      = data.darts.max_by { |r| r.score }.score
 
-    p
-    - d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
-    p d_bulls
-    = d_bulls
-    p throw
-    = recent.length * 8 * 3
-    p D-BULL率
-    = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
-    '%
+      #average-score
+        p 直近3ゲーム
+        - recent = data.darts.reverse.take(3).select { |r| r.game == 'countup' }
+        - for row in recent
+          p
+          = row.score
 
-    p
-    - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
-    p s_bulls
-    = s_bulls
-    p throw
-    = recent.length * 8 * 3
-    p S-BULL率
-    = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
-    '%
+        p 平均
+        = recent.map{ |r| r.score }.inject(:+) / recent.length
 
-    p Total BULL率
-    = sprintf( "%.02f", ( d_bulls + s_bulls ) * 100 / ( recent.length * 8 * 3 ).to_f )
-
-    #graph
-      p 日ごと計算
-      - by_date = data.darts.group_by{ |r| r.date }
-      p 平均
-      - by_date.each do |k,v|
-        = k
-        ' : 
-        = v.map{ |r| r.score }.inject(:+) / v.length
         p
-
-      p BULL率
-      - by_date.each do |k,v|
-        = k
-        ' : 
-        - d_bulls = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
-        - s_bulls = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+        - d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
+        p d_bulls
         = d_bulls
-        ':
-        = s_bulls
-        ':
-        = v.length
-        ':
-        = sprintf( "%.02f", ( s_bulls + d_bulls ) * 100 / ( v.length * 8 * 3 ).to_f )
+        p throw
+        = recent.length * 8 * 3
+        p D-BULL率
+        = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
         '%
+
         p
+        - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+        p s_bulls
+        = s_bulls
+        p throw
+        = recent.length * 8 * 3
+        p S-BULL率
+        = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
+        '%
+
+        p Total BULL率
+        = sprintf( "%.02f", ( d_bulls + s_bulls ) * 100 / ( recent.length * 8 * 3 ).to_f )
+
+        #graph
+          p 日ごと計算
+          - by_date = data.darts.group_by{ |r| r.date }
+          p 平均
+          - by_date.each do |k,v|
+            = k
+            ' : 
+            = v.map{ |r| r.score }.inject(:+) / v.length
+            p
+
+          p BULL率
+          - by_date.each do |k,v|
+            = k
+            ' : 
+            - d_bulls = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
+            - s_bulls = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+            = d_bulls
+            ':
+            = s_bulls
+            ':
+            = v.length
+            ':
+            = sprintf( "%.02f", ( s_bulls + d_bulls ) * 100 / ( v.length * 8 * 3 ).to_f )
+            '%
+            p
 
 == javascript_include_tag  "countup"

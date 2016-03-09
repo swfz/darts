@@ -1,18 +1,63 @@
 ---
-title: Let's Darts!
+title: Dashboard
 ---
 
+.right_col[role="main"]
+  div
+    .page-title
+      .title_left
+        h3
+          |  Dashboard
+          small
+            |  darts practice in house result.
+    .clearfix
+    .row
+      .col-md-6.col-sm-6.col-xs-12
+        .x_panel
+          .x_title
+            h2
+              | Award
+              small
+                | total award
+            ul.nav.navbar-right.panel_toolbox
+              li
+                a.collapse-link
+                  i.fa.fa-chevron-up
+              li.dropdown
+                a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                  i.fa.fa-wrench
+                ul.dropdown-menu[role="menu"]
+                  li
+                    a[href="#"]
+                      | Settings 1
+                  li
+                    a[href="#"]
+                      | Settings 2
+              li
+                a.close-link
+                  i.fa.fa-close
+            .clearfix
+          - awards = data.darts.map{ |r| r.award }
+          - all_awards = {}
+          - awards.each do |r|
+            - r.each do |k,v|
+              - all_awards[k] ||= 0
+              - all_awards[k] += v
 
-p アワード
-- awards = data.darts.map{ |r| r.award }
-- all_awards = {}
-- awards.each do |r|
-  - r.each do |k,v|
-    - all_awards[k] ||= 0
-    - all_awards[k] += v
+          .x_content
+            table.table
+              thead
+                tr
+                  th
+                    | Award
+                  th
+                    | Count
+              tbody
+              - all_awards.each do |k,v|
+                tr
+                  th[scope="row"]
+                    = k
+                  td
+                    = v
 
-- all_awards.each do |k,v|
-  p
-    = k
-    ':
-    = v
+
