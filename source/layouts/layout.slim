@@ -14,10 +14,14 @@ html
     link href='https://code.getmdl.io/1.1.2/material.indigo-pink.min.css' rel='stylesheet' type='text/css'
     script src='https://code.getmdl.io/1.1.2/material.min.js' type='text/javascript'
     link rel="stylesheet" href="/stylesheets/styles.css"
-    script src='http://ccchart.com/js/ccchart.js' type='text/javascript'
 
     / == stylesheet_link_tag :site
     == javascript_include_tag  "all"
+
+    / C3.js
+    script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js" type="text/javascript"
+    == javascript_include_tag  "c3.min"
+    link rel="stylesheet" href="/stylesheets/c3.min.css"
 
   body class="#{page_classes}"
     .demo-layout.mdl-layout.mdl-js-layout.mdl-layout--fixed-drawer.mdl-layout--fixed-header

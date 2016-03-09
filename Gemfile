@@ -14,4 +14,4 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw]
 gem 'middleman-compass', '>= 4.0.0.rc.1'
 gem 'middleman', '>= 4.0.0.rc.1'
 gem 'middleman-livereload'
-gem 'middleman-deploy'
+# gem 'middleman-deploy', "~> 1.0"

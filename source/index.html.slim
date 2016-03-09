@@ -2,9 +2,17 @@
 title: Let's Darts!
 ---
 
-.welcome
-  .logo
-    == image_tag 'middleman-logo.svg'
-  h1 Middleman is Watching
-  p.doc
-    == link_to "Read Online Documentation", "http://middlemanapp.com/"
+
+p アワード
+- awards = data.darts.map{ |r| r.award }
+- all_awards = {}
+- awards.each do |r|
+  - r.each do |k,v|
+    - all_awards[k] ||= 0
+    - all_awards[k] += v
+
+- all_awards.each do |k,v|
+  p
+    = k
+    ':
+    = v

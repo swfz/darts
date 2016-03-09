@@ -7,7 +7,7 @@ require 'highline'
 
 class DataFile
   def initialize
-    @data_file = 'data.json'
+    @data_file = 'data/darts.json'
     @datas     = self.read(@data_file)
   end
   attr_accessor :data_file, :datas

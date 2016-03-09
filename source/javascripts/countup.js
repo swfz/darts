@@ -1,25 +1,39 @@
-var chartdata4 = {
+var req = new XMLHttpRequest();
+req.open("GET", "/data.json", false);
+req.send(null);
+var datalist = JSON.parse( req.responseText );
 
-  "config": {
-      "title": "stacked Chart",
-      "subTitle": "Canvasを使った積み上げチャートです",
-      "type": "stacked",
-      "barWidth": 48,
-      "colorSet": 
-            ["red","#FF9114","#3CB000","#00A8A2","#0036C0","#C328FF","#FF34C0"],
-      "bgGradient": {
-                  "direction":"vertical",
-                  "from":"#687478",
-                  "to":"#222222"
-                }
-    },
+var countupScores = datalist.filter(function(row,index,array){
+  return ( row.game == 'countup' ) ? true : false;
+});
 
-  "data": [
-      ["年度",2007,2008,2009,2010,2011,2012,2013],
-      ["紅茶",435,332,524,688,774,825,999],
-      ["コーヒー",600,335,584,333,457,788,900],
-      ["ジュース",60,435,456,352,567,678,1260],
-      ["ウーロン",200,123,312,200,402,300,512]
-    ]
-};
-ccchart.init('countup', chartdata4)
+var award_rows = countupScores.map(function(r){return r.award});
+console.log(award_rows);
+
+var bulls = 0;
+award_rows.forEach(function(r){
+  bulls += r["D-BULL"] || 0;
+  bulls += r["S-BULL"] || 0;
+});
+
+console.log("bulls:", bulls);
+var scores = countupScores.map(function(r){return r.score});
+var total  = scores.reduce(function(x,y){ return x + y});
+var average = total/scores.length;
+console.log( "average:", average );
+var maxScore = Math.max.apply(null, scores );
+console.log( "max:", maxScore );
+
+var bullRate = bulls / ( scores.length * 8 * 3 ) * 100;
+console.log( "bull rate:", bullRate );
+
+var chart = c3.generate({
+  bindto: '#histgram',
+  data: {
+      columns: [
+          ['data1', 30, 200, 100, 400, 150, 250],
+          ['data2', 130, 100, 140, 200, 150, 50]
+        ],
+      type: 'bar'
+    }
+});

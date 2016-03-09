@@ -2,8 +2,67 @@
 title: CountUp
 ---
 
-.demo-charts.mdl-color--white.mdl-shadow--2dp.mdl-cell.mdl-cell--12-col.mdl-grid
-  canvas id="countup"
+#max-score
+  p 最高点:
+  = data.darts.max_by { |r| r.score }.score
 
+  #average-score
+    p 直近3ゲーム
+    - recent = data.darts.reverse.take(3).select { |r| r.game == 'countup' }
+    - for row in recent
+      p
+      = row.score
+
+    p 平均
+    = recent.map{ |r| r.score }.inject(:+) / recent.length
+
+    p
+    - d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
+    p d_bulls
+    = d_bulls
+    p throw
+    = recent.length * 8 * 3
+    p D-BULL率
+    = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
+    '%
+
+    p
+    - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+    p s_bulls
+    = s_bulls
+    p throw
+    = recent.length * 8 * 3
+    p S-BULL率
+    = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
+    '%
+
+    p Total BULL率
+    = sprintf( "%.02f", ( d_bulls + s_bulls ) * 100 / ( recent.length * 8 * 3 ).to_f )
+
+    #graph
+      p 日ごと計算
+      - by_date = data.darts.group_by{ |r| r.date }
+      p 平均
+      - by_date.each do |k,v|
+        = k
+        ' : 
+        = v.map{ |r| r.score }.inject(:+) / v.length
+        p
+
+      p BULL率
+      - by_date.each do |k,v|
+        = k
+        ' : 
+        - d_bulls = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
+        - s_bulls = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+        = d_bulls
+        ':
+        = s_bulls
+        ':
+        = v.length
+        ':
+        = sprintf( "%.02f", ( s_bulls + d_bulls ) * 100 / ( v.length * 8 * 3 ).to_f )
+        '%
+        p
 
 == javascript_include_tag  "countup"
