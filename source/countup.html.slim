@@ -1,35 +1,46 @@
 .right_col[role="main"]
-  div
+  .row
     .page-title
       h3
         | CountUp
         small
-          | CountUp Scores
-    .clearfix
-    .row
-      .col-md-8.col-sm-8.col-xs-12
-        .x_panel
-          .x_title
-            h2
-              | Scatter Graph
-            ul.nav.navbar-right.panel_toolbox
+          | detail data
+  .clearfix
+  .row.tile_count
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          i.fa.fa-bullseye
+          |  Max Score
+        .count
+          = data.darts.select{ |r| r.game == 'countup' }.max_by { |r| r.score }.score
+        span.count_bottom
+          i.blue
+            = data.darts.select{ |r| r.game == 'countup' }.max_by { |r| r.score }.date
+  .row
+    .col-md-8.col-sm-8.col-xs-12
+      .x_panel
+        .x_title
+          h2
+            | Scatter Graph
+          ul.nav.navbar-right.panel_toolbox
+            li
+              a[href="#"]
+                i.fa.fa-chevron-up
+              li.dropdown
+                a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                  i.fa.fa-wrench
+                ul.dropdown-menu[role="menu"]
+                  li
+                    a[href="#"]
+                      | dummy
               li
                 a[href="#"]
-                  i.fa.fa-chevron-up
-                li.dropdown
-                  a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
-                    i.fa.fa-wrench
-                  ul.dropdown-menu[role="menu"]
-                    li
-                      a[href="#"]
-                        | dummy
-                li
-                  a[href="#"]
-                    i.fa.fa-close
-              .clearfix
-            .x_content
-              #echart_scatter[style="height:350px;"]
-
+                  i.fa.fa-close
+            .clearfix
+          .x_content
+            #echart_scatter[style="height:350px;"]
 
 
     #max-score
