@@ -18,14 +18,34 @@
         span.count_bottom
           i.blue
             = data.darts.select{ |r| r.game == 'countup' }.max_by { |r| r.score }.date
-    .animated.flipInY.col-md-3.col-sm-3.col-xs-6.tile_stats_count
-      span.count_top
-        | Average Score
-      .count
-        - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
-        = recent.map{ |r| r.score }.inject(:+) / recent.length
-      span.sparkline_one[style="height: 160px; width: 200px;"]
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          | Average Score
+        .count
+          - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
+          = recent.map{ |r| r.score }.inject(:+) / recent.length
+        span.sparkline_one[style="height: 160px; width: 200px;"]
         canvas[width="160" height="60" style="display: inline-block; vertical-align: top; width: 160px; height: 30px;"]
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          i.fa.fa-bullseye
+          |  BULL rate
+        .count
+          - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+          - d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
+          = sprintf( "%.02f", ( d_bulls + s_bulls ) * 100 / ( recent.length * 8 * 3 ).to_f )
+          |%
+        span.count_bottom
+          i.blue
+            | recent 30 games
+        p.count_bottom
+          i.blue
+            = s_bulls + d_bulls
+            |  hits
   .row
     .col-md-8.col-sm-8.col-xs-12
       .x_panel
