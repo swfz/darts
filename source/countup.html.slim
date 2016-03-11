@@ -33,6 +33,18 @@
       .right
         span.count_top
           i.fa.fa-bullseye
+          | Stats
+        .count
+          - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
+          = sprintf("%.02f", recent.map{ |r| r.score }.inject(:+) / recent.length / 8 .to_f )
+        span.count_bottom
+          i.blue
+            | 1Round Score Average
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          i.fa.fa-bullseye
           |  BULL rate
         .count
           - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
