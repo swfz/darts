@@ -69,6 +69,31 @@
             .clearfix
           .x_content
             #echart_scatter[style="height:350px;"]
+    .col-md-4.col-sm-4.col-xs-12
+      .x_panel
+        .x_title
+          h2
+            | BULL Rate
+          ul.nav.navbar-right.panel_toolbox
+            li
+              a[href="#"]
+                i.fa.fa-chevron-up
+            li.dropdown
+              a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                i.fa.fa-wrench
+              ul.dropdown-menu[role="menu"]
+                li
+                  a[href="#"]
+                    | Settings 1
+                li
+                  a[href="#"]
+                    | Settings 2
+            li
+              a[href="#"]
+                i.fa.fa-close
+          .clearfix
+        .x_content
+          #echart_mini_pie[style="height:350px;"]
 
 
     #max-score
@@ -134,7 +159,14 @@
             '%
             p
 
-script[src="/javascripts/jquery.sparkline.min.js"]
+- recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
+- d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
+- s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+- d_bull_rate = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
+- s_bull_rate = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
+
+script[src="/javascripts/echarts-all.js"]
+script[src="/javascripts/green.js"]
 script
   |  $('document').ready(function() {
   |    $(".sparkline_one").sparkline(#{recent.map{ |r| r.score }}, {
@@ -146,4 +178,85 @@ script
   |       barColor: '#269AB9'
   |    })
   |  });
+  /* BULL rate */
+  |  var dataStyle = {
+  |    normal: {
+  |      label: {
+  |        show: false
+  |      },
+  |      labelLine: {
+  |        show: false
+  |      }
+  |    }
+  |  };
+  |  var placeHolderStyle = {
+  |    normal: {
+  |      color: 'rgba(0,0,0,0)',
+  |      label: {
+  |        show: false
+  |      },
+  |      labelLine: {
+  |        show: false
+  |      }
+  |    },
+  |    emphasis: {
+  |      color: 'rgba(0,0,0,0)'
+  |    }
+  |  };
+  |  var myChartx = echarts.init(document.getElementById('echart_mini_pie'), theme);
+  |  myChartx.setOption({
+  |    title: {
+  |      text: 'BULL Rate',
+  |      subtext: 'single double',
+  |      x: 'center',
+  |      y: 'center',
+  |      itemGap: 20,
+  |      textStyle: {
+  |        color: 'rgba(30,144,255,0.8)',
+  |        fontSize: 35,
+  |        fontWeight: 'bolder'
+  |      }
+  |    },
+  |    tooltip: {
+  |      show: true,
+  |      formatter: "{a} <br/>{b} : {c} ({d}%)"
+  |    },
+  |    legend: {
+  |      orient: 'vertical',
+  |      x: 170,
+  |      y: 45,
+  |      itemGap: 12,
+  |      data: ['#{s_bull_rate}% S-BULL', '#{d_bull_rate}% D-BULL']
+  |    },
+  |    series: [{
+  |      name: 'S-BULL',
+  |      type: 'pie',
+  |      clockWise: false,
+  |      radius: [105, 130],
+  |      itemStyle: dataStyle,
+  |      data: [{
+  |        value: #{s_bull_rate},
+  |        name: '#{s_bull_rate}% S-BULL'
+  |      }, {
+  |        value: 100 - #{s_bull_rate},
+  |        name: 'invisible',
+  |        itemStyle: placeHolderStyle
+  |      }]
+  |    }, {
+  |      name: 'D-BULL',
+  |      type: 'pie',
+  |      clockWise: false,
+  |      radius: [25, 80],
+  |      itemStyle: dataStyle,
+  |      data: [{
+  |        value: #{d_bull_rate},
+  |        name: '#{d_bull_rate}% D-BULL'
+  |      }, {
+  |        value: 100 - #{d_bull_rate},
+  |        name: 'invisible',
+  |        itemStyle: placeHolderStyle
+  |      }]
+  |    }]
+  |  });
+
 / == javascript_include_tag  "countup"
