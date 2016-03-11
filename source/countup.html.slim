@@ -18,6 +18,14 @@
         span.count_bottom
           i.blue
             = data.darts.select{ |r| r.game == 'countup' }.max_by { |r| r.score }.date
+    .animated.flipInY.col-md-3.col-sm-3.col-xs-6.tile_stats_count
+      span.count_top
+        | Average Score
+      .count
+        - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
+        = recent.map{ |r| r.score }.inject(:+) / recent.length
+      span.sparkline_one[style="height: 160px; width: 200px;"]
+        canvas[width="160" height="60" style="display: inline-block; vertical-align: top; width: 160px; height: 30px;"]
   .row
     .col-md-8.col-sm-8.col-xs-12
       .x_panel
@@ -49,7 +57,7 @@
 
       #average-score
         p 直近3ゲーム
-        - recent = data.darts.reverse.take(3).select { |r| r.game == 'countup' }
+        - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
         - for row in recent
           p
           = row.score
@@ -106,4 +114,16 @@
             '%
             p
 
-== javascript_include_tag  "countup"
+script[src="/javascripts/jquery.sparkline.min.js"]
+script
+  |  $('document').ready(function() {
+  |    $(".sparkline_one").sparkline(#{recent.map{ |r| r.score }}, {
+  |      type: 'bar',
+  |       height: '40',
+  |       barWidth: 5,
+  |       colorMap: { '10': '#a1a1a1' },
+  |       barSpacing: 2,
+  |       barColor: '#269AB9'
+  |    })
+  |  });
+/ == javascript_include_tag  "countup"
