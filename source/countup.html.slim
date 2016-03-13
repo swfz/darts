@@ -12,7 +12,7 @@
       .right
         span.count_top
           i.fa.fa-bullseye
-          |  Max Score
+          |  High Score
         .count
           = data.darts.select{ |r| r.game == 'countup' }.max_by { |r| r.score }.score
         span.count_bottom
@@ -45,7 +45,7 @@
       .right
         span.count_top
           i.fa.fa-bullseye
-          |  BULL rate
+          |  BULL Rate
         .count
           - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
           - d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
@@ -63,24 +63,27 @@
       .x_panel
         .x_title
           h2
-            | Scatter Graph
-          ul.nav.navbar-right.panel_toolbox
+            | Histgram
+          ul.nav.navbar-left.panel_toolbox
             li
               a[href="#"]
                 i.fa.fa-chevron-up
-              li.dropdown
-                a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
-                  i.fa.fa-wrench
-                ul.dropdown-menu[role="menu"]
-                  li
-                    a[href="#"]
-                      | dummy
-              li
-                a[href="#"]
-                  i.fa.fa-close
-            .clearfix
-          .x_content
-            #echart_scatter[style="height:350px;"]
+            li.dropdown
+              a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                i.fa.fa-wrench
+              ul.dropdown-menu[role="menu"]
+                li
+                  a[href="#"]
+                    | Settings 1
+                li
+                  a[href="#"]
+                    | Settings 2
+            li
+              a[href="#"]
+                i.fa.fa-close
+          .clearfix
+        .x_content
+          #echart_line[style="height:350px;"]
     .col-md-4.col-sm-4.col-xs-12
       .x_panel
         .x_title
@@ -107,22 +110,21 @@
         .x_content
           #echart_mini_pie[style="height:350px;"]
 
-
+/
     #max-score
       p 最高点:
       = data.darts.max_by { |r| r.score }.score
-
-      #average-score
+/      #average-score
         p 直近3ゲーム
         - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
         - for row in recent
           p
           = row.score
 
-        p 平均
+/        p 平均
         = recent.map{ |r| r.score }.inject(:+) / recent.length
 
-        p
+/        p
         - d_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n }
         p d_bulls
         = d_bulls
@@ -132,7 +134,7 @@
         = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
         '%
 
-        p
+/        p
         - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
         p s_bulls
         = s_bulls
@@ -142,10 +144,10 @@
         = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
         '%
 
-        p Total BULL率
+/        p Total BULL率
         = sprintf( "%.02f", ( d_bulls + s_bulls ) * 100 / ( recent.length * 8 * 3 ).to_f )
 
-        #graph
+/        #graph
           p 日ごと計算
           - by_date = data.darts.group_by{ |r| r.date }
           p 平均
@@ -155,7 +157,7 @@
             = v.map{ |r| r.score }.inject(:+) / v.length
             p
 
-          p BULL率
+/          p BULL率
           - by_date.each do |k,v|
             = k
             ' : 
@@ -176,7 +178,19 @@
 - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
 - d_bull_rate = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
 - s_bull_rate = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
-
+/ 日ごと
+- by_date = data.darts.group_by{ |r| r.date }
+- results_by_date = {}
+- by_date.each do |k,v|
+  - bulls_by_date = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n } + v.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
+  - results_by_date["date"] ||= []
+  - results_by_date["date"].push( k )
+  - results_by_date["bulls"] ||= []
+  - results_by_date["bulls"].push( bulls_by_date )
+  - results_by_date["avg"] ||= []
+  - results_by_date["avg"].push( v.map{ |r| r.score }.inject(:+) / v.length )
+  - results_by_date["rate"] ||= []
+  - results_by_date["rate"].push( sprintf( "%.02f", bulls_by_date * 100 / ( v.length * 8 * 3 ).to_f ) )
 script[src="/javascripts/echarts-all.js"]
 script[src="/javascripts/green.js"]
 script
@@ -244,13 +258,13 @@ script
   |      name: 'S-BULL',
   |      type: 'pie',
   |      clockWise: false,
-  |      radius: [105, 130],
+  |      radius: [100, 130],
   |      itemStyle: dataStyle,
   |      data: [{
   |        value: #{s_bull_rate},
   |        name: '#{s_bull_rate}% S-BULL'
   |      }, {
-  |        value: 100 - #{s_bull_rate},
+  |        value: 50 - #{s_bull_rate},
   |        name: 'invisible',
   |        itemStyle: placeHolderStyle
   |      }]
@@ -258,16 +272,75 @@ script
   |      name: 'D-BULL',
   |      type: 'pie',
   |      clockWise: false,
-  |      radius: [25, 80],
+  |      radius: [50, 80],
   |      itemStyle: dataStyle,
   |      data: [{
   |        value: #{d_bull_rate},
   |        name: '#{d_bull_rate}% D-BULL'
   |      }, {
-  |        value: 100 - #{d_bull_rate},
+  |        value: 50 - #{d_bull_rate},
   |        name: 'invisible',
   |        itemStyle: placeHolderStyle
   |      }]
+  |    }]
+  |  });
+  |  var myChart = echarts.init(document.getElementById('echart_line'), theme);
+  |  myChart.setOption({
+  |    title: {
+  |      text: 'Average, Bull Rate, Bulls',
+  |      subtext: 'Subtitle'
+  |    },
+  |    tooltip: {
+  |      trigger: 'axis'
+  |    },
+  |    legend: {
+  |      data: ['Average', 'Bull Rate', 'Bulls']
+  |    },
+  |    calculable: true,
+  |    xAxis: [{
+  |      type: 'category',
+  |      boundaryGap: false,
+  |      data: #{results_by_date["date"]}
+  |    }],
+  |    yAxis: [{
+  |      type: 'value'
+  |    }],
+  |    series: [{
+  |      name: 'Average',
+  |      type: 'line',
+  |      smooth: true,
+  |      itemStyle: {
+  |        normal: {
+  |          areaStyle: {
+  |            type: 'default'
+  |          }
+  |        }
+  |      },
+  |      data: #{results_by_date["avg"]}
+  |    }, {
+  |      name: 'Bull Rate',
+  |      type: 'line',
+  |      smooth: true,
+  |      itemStyle: {
+  |        normal: {
+  |          areaStyle: {
+  |            type: 'default'
+  |          }
+  |        }
+  |      },
+  |      data: #{results_by_date["rate"]}
+  |    }, {
+  |      name: 'Bulls',
+  |      type: 'line',
+  |      smooth: true,
+  |      itemStyle: {
+  |        normal: {
+  |          areaStyle: {
+  |            type: 'default'
+  |          }
+  |        }
+  |      },
+  |      data: #{results_by_date["bulls"]}
   |    }]
   |  });
 
