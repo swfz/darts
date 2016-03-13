@@ -89,7 +89,7 @@ class Round
       @awards.push('S-BULL') if p["area"].to_i == 50 and p["scale"].nil?
     }
     # areaが全て同じ、かつ三投ともdoubleかtripleである
-    @awards.push('THREEINABED')     if @points.map{|r| r["area"] }.uniq.count == 1 and @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'}
+    @awards.push('THREEINABED') if @points.map{|r| r["area"] }.uniq.count == 1 and @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'}
 
     @awards.push('TON80') and return @awards    if @points.all? {|p| p["area"].to_i == 20 and p["scale"] == 't'}
     @awards.push('THREEINTHEBLACK') if @points.all? {|p| p["area"].to_i == 50 and p["scale"] == 'd'}
