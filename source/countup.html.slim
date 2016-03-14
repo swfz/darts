@@ -36,7 +36,21 @@
           | Stats
         .count
           - recent = data.darts.reverse.take(30).select { |r| r.game == 'countup' }
-          = sprintf("%.02f", recent.map{ |r| r.score }.inject(:+) / recent.length / 8 .to_f )
+          - t_stats = recent.map{ |r| r.score }.inject(:+) / recent.length / 8 .to_f
+          = sprintf("%.02f", t_stats )
+          / 前日との差
+          - today = Time.now.strftime("%Y-%m-%d")
+          - until_yesterday = data.darts.select{ |r| r.date != today }.reverse.take(30).select{ |r| r.game == 'countup' }
+          - y_stats = until_yesterday.map{ |r| r.score }.inject(:+) / until_yesterday.length / 8 .to_f
+        span.count_bottom
+        - if t_stats - y_stats < 0
+          i.red
+            = sprintf("%.02f", t_stats - y_stats )
+        - else
+          i.blue
+            | +
+            = sprintf("%.02f", t_stats - y_stats )
+        br
         span.count_bottom
           i.blue
             | 1Round Score Average
@@ -178,6 +192,7 @@
 - s_bulls = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
 - d_bull_rate = sprintf( "%.02f", d_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
 - s_bull_rate = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
+
 / 日ごと
 - by_date = data.darts.group_by{ |r| r.date }
 - results_by_date = {}
