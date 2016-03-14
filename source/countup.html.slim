@@ -123,6 +123,57 @@
           .clearfix
         .x_content
           #echart_mini_pie[style="height:350px;"]
+  .row
+    .col-md-12.col-sm-12.col-xs-12
+      .x_panel
+        .x_title
+          h2
+            | Recent Games
+            small
+              | detail
+          ul.nav.navbar-right.panel_toolbox
+            li
+              a.collapse-link
+                i.fa.fa-chevron-up
+            li.dropdown
+              a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                i.fa.fa-wrench
+              ul.dropdown-menu[role="menu"]
+                li
+                  a[href="#"]
+                    | Settings 1
+                li
+                  a[href="#"]
+                    | Settings 2
+            li
+              a.close-link
+                i.fa.fa-close
+          .clearfix
+            - recent_games = data.darts.select{ |r| r.game == 'countup' }.reverse.take(10)
+          .x_content
+            table.table
+              thead
+                tr
+                  th
+                    | Date
+                  th
+                    | Score
+                  th
+                    | Stats
+                  th
+                    | Awards
+              tbody
+              - for game in recent_games
+                tr
+                  th[scope="row"]
+                    = game.date
+                  td
+                    = game.score
+                  td
+                    = game.score / 8
+                  td
+                    - game.award.each do |k,v|
+                      = sprintf("%s:%d ", k,v)
 
 /
     #max-score
