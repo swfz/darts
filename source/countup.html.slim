@@ -257,6 +257,8 @@
   - results_by_date["avg"].push( v.map{ |r| r.score }.inject(:+) / v.length )
   - results_by_date["rate"] ||= []
   - results_by_date["rate"].push( sprintf( "%.02f", bulls_by_date * 100 / ( v.length * 8 * 3 ).to_f ) )
+  - results_by_date["max"] ||= []
+  - results_by_date["max"].push( v.max_by{ |r| r.score }.score )
 script[src="/javascripts/echarts-all.js"]
 script[src="/javascripts/green.js"]
 script
@@ -315,8 +317,8 @@ script
   |    },
   |    legend: {
   |      orient: 'vertical',
-  |      x: 170,
-  |      y: 45,
+  |      x: 10,
+  |      y: 5,
   |      itemGap: 12,
   |      data: ['#{s_bull_rate}% S-BULL', '#{d_bull_rate}% D-BULL']
   |    },
@@ -360,7 +362,7 @@ script
   |      trigger: 'axis'
   |    },
   |    legend: {
-  |      data: ['Average', 'Bull Rate', 'Bulls']
+  |      data: ['Average', 'HighScore', 'Bull Rate', 'Bulls']
   |    },
   |    calculable: true,
   |    xAxis: [{
@@ -383,6 +385,18 @@ script
   |        }
   |      },
   |      data: #{results_by_date["avg"]}
+  |    }, {
+  |      name: 'HighScore',
+  |      type: 'line',
+  |      smooth: true,
+  |      itemStyle: {
+  |        normal: {
+  |          areaStyle: {
+  |            type: 'default'
+  |          }
+  |        }
+  |      },
+  |      data: #{results_by_date["max"]}
   |    }, {
   |      name: 'Bull Rate',
   |      type: 'line',
