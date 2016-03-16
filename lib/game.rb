@@ -4,6 +4,7 @@ require 'tapp'
 require 'highline'
 require './lib/round.rb'
 
+
 class DataFile
   def initialize
     @data_file = 'data/darts.json'
@@ -30,6 +31,7 @@ class DataFile
 end
 
 class Game
+  include Round
   def initialize
     @last_round    = 20
     @current_round = 0
@@ -73,7 +75,7 @@ class Countup < Game
     h = HighLine.new
 
     while points_str = STDIN.gets
-      round = Round.new( points_str, self.current_round )
+      round = Round.const_get( self.classname.capitalize ).new( points_str, self.current_round )
 
       awards = round.get_awards
       display_award = awards.reject{|award| award == 'S-BULL' or award == 'D-BULL' }

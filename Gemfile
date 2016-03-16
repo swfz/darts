@@ -15,5 +15,7 @@ gem 'middleman-compass', '>= 4.0.0.rc.1'
 gem 'middleman', '>= 4.0.0.rc.1'
 gem 'middleman-livereload'
 gem 'less'
+gem 'tapp'
+gem 'highline'
 gem 'therubyracer'
 # gem 'middleman-deploy', "~> 1.0"
