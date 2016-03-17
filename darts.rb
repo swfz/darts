@@ -8,7 +8,6 @@ p 'Error! Not Exist Game' and exit unless Object.const_defined?(ARGV[0].capitali
 h = HighLine.new
 game = Object.const_get(ARGV[0].capitalize).new
 p ARGV[0]
-p 'Start!!'
 game.start
 game.update_score( game.score )
 game.write_data

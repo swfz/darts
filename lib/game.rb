@@ -34,7 +34,7 @@ class Base
   include Round
   def initialize
     @last_round    = 20
-    @current_round = 0
+    @current_round = 1
     @score         = 0
     @file_obj      = DataFile.new
     @game_data     = {}
@@ -72,16 +72,36 @@ class Base
     @file_obj.write( @file_obj.data_file, @game_data )
   end
 
-  def is_last_round
-    return @current_round >= @last_round
+  def is_end
+    return @current_round > @last_round
   end
 
-  def print_score( round_score, awards  )
+  def before_input_print
+    puts "=========="
+    puts "Round%d"%([self.current_round])
+  end
+
+  def after_input_print( round_score, awards )
     h = HighLine.new
     display_award = awards.reject{|award| award == 'S-BULL' or award == 'D-BULL' }
-    puts h.color("#{display_award.first.to_s}", :yellow ) if display_award
-    puts "Round%d: %d"%([self.current_round,round_score])
+    puts h.color("#{display_award.last.to_s}", :yellow ) if display_award
+    puts "Score: %d"%([round_score])
     puts h.color("Total: %d"%([self.score]), :green)
+  end
+
+  def start
+    self.before_input_print
+    while points_str = STDIN.gets
+      round = Round.const_get( self.classname.capitalize ).new( points_str, self.current_round )
+
+      self.update_award( round.awards )
+      self.piliup_score( round.score )
+      self.incr_round
+
+      self.after_input_print( round.score, round.awards )
+      break if self.is_end
+      self.before_input_print
+    end
   end
 end
 
@@ -90,18 +110,17 @@ class Countup < Base
     super
     @last_round = 8
   end
+end
 
-  def start
-    while points_str = STDIN.gets
-      round = Round.const_get( self.classname.capitalize ).new( points_str, self.current_round )
+class Cricketcountup < Base
+  def initialize
+    super
+    @last_round = 8
+  end
 
-      self.update_award( round.awards )
-      self.piliup_score( round.score )
-      self.incr_round
-
-      self.print_score( round.score, round.awards )
-
-      break if self.is_last_round
-    end
+  def before_input_print
+    target = [ 0, 20, 19, 18, 17, 16, 15, 50, 'All Cricket Number' ]
+    puts "========== Target is %s!!"%(target[self.current_round])
+    puts "Round%d"%([self.current_round])
   end
 end
