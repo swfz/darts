@@ -36,10 +36,12 @@ class Base
     @last_round    = 20
     @current_round = 1
     @score         = 0
+    @stats         = 0
+    @stats_scores  = []
     @file_obj      = DataFile.new
     @game_data     = {}
   end
-  attr_accessor :last_round, :current_round, :score, :file_obj, :game_data
+  attr_accessor :last_round, :current_round, :score, :file_obj, :game_data, :stats_scores
 
   def classname
     self.class.to_s.split('::').last.downcase
@@ -54,10 +56,11 @@ class Base
     }
   end
 
-  def update_score( score )
+  def update_game_data
     @game_data["date"]  = Date.today.strftime("%Y-%m-%d")
     @game_data["game"]  = self.classname
-    @game_data["score"] = score
+    @game_data["score"] = @score
+    @game_data["stats"] = self.calc_stats
   end
 
   def piliup_score( round_score )
@@ -83,7 +86,7 @@ class Base
 
   def after_input_print( round_score, awards )
     h = HighLine.new
-    display_award = awards.reject{|award| award == 'S-BULL' or award == 'D-BULL' }
+    display_award = awards.reject{|award| award == 'S-BULL' or award == 'D-BULL' or award == 'TRIPLE' or award == 'DOUBLE'}
     puts h.color("#{display_award.last.to_s}", :yellow ) if display_award
     puts "Score: %d"%([round_score])
     puts h.color("Total: %d"%([self.score]), :green)
@@ -97,6 +100,7 @@ class Base
       self.update_award( round.awards )
       self.piliup_score( round.score )
       self.incr_round
+      self.stats_scores.push( round.get_stats_score )
 
       self.after_input_print( round.score, round.awards )
       break if self.is_end
@@ -110,6 +114,10 @@ class Countup < Base
     super
     @last_round = 8
   end
+
+  def calc_stats
+    @stats_scores.inject(:+) / @last_round .to_f
+  end
 end
 
 class Cricketcountup < Base
@@ -122,5 +130,9 @@ class Cricketcountup < Base
     target = [ 0, 20, 19, 18, 17, 16, 15, 50, 'All Cricket Number' ]
     puts "========== Target is %s!!"%(target[self.current_round])
     puts "Round%d"%([self.current_round])
+  end
+
+  def calc_stats
+    @stats_scores.inject(:+) / @last_round .to_f
   end
 end

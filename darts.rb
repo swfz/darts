@@ -9,7 +9,7 @@ h = HighLine.new
 game = Object.const_get(ARGV[0].capitalize).new
 p ARGV[0]
 game.start
-game.update_score( game.score )
+game.update_game_data
 game.write_data
 
 puts h.color("Total Score: %d"%(game.score), :red )

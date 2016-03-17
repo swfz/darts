@@ -4,9 +4,9 @@ require 'tapp'
 module Round
   class Base
     def initialize(points_str, current_round)
-      @round  = current_round
-      @points = []
-      @awards = []
+      @round       = current_round
+      @points      = []
+      @awards      = []
       points_str.split(" ").each{|point_str|
         # triple double single bull doublebull
         # 20t    20d    20     50   50d
@@ -16,7 +16,7 @@ module Round
       }
       calc_awards
     end
-    attr_accessor :awards
+    attr_accessor :awards, :stats_score
     # points(eg)
     # { area => 20, scale => t,   point => 60 } 20T
     # { area => 50, scale => d,   point => 50 } DBULL
@@ -31,6 +31,10 @@ module Round
   class Countup < Base
     def initialize(points_str, current_round)
       super
+    end
+
+    def get_stats_score
+      @points.map{|p| p["point"]}.inject(:+)
     end
 
     private
@@ -60,6 +64,7 @@ module Round
       return point * 3 if scale == 't'
       return point
     end
+
   end
 
   class Cricketcountup < Base
@@ -67,17 +72,21 @@ module Round
       super
     end
 
+    def get_stats_score
+      @points.select{|p| p["point"] > 0}.inject(0){ |result, p| p["scale"] == 't' ? result + 3 : p["scale"] == 'd' ? result + 2 : result + 1 }
+    end
+
     private
     def calc_awards
       count = 0
 
       @points.each{|p|
-        @awards.push('D-BULL') if p["area"].to_i == 50 and p["point"] == 50 and p["scale"] == 'd'
-        @awards.push('S-BULL') if p["area"].to_i == 50 and p["point"] == 50 and p["scale"].nil?
+        @awards.push('D-BULL') if p["area"].to_i == 50 and p["scale"] == 'd'
+        @awards.push('S-BULL') if p["area"].to_i == 50 and p["scale"].nil?
         if p["point"] > 0
           count += 1 if p["scale"].nil?
-          count += 2 if p["scale"] == 'd'
-          count += 3 if p["scale"] == 't'
+          @awards.push('DOUBLE') and count += 2 if p["scale"] == 'd'
+          @awards.push('TRIPLE') and count += 3 if p["scale"] == 't'
         end
       }
 
@@ -88,8 +97,8 @@ module Round
       @awards.push('TON80') and return @awards    if @points.all? {|p| p["area"].to_i == 20 and p["scale"] == 't'}
       @awards.push('THREEINTHEBLACK') if @points.all? {|p| p["area"].to_i == 50 and p["scale"] == 'd'}
       @awards.push('HATTRICK') and return @awards if @points.all? {|p| p["area"].to_i == 50 }
-      @awards.push('HIGHTON') and return @awards  if @points.map{|r| r["point"] }.inject(:+) >= 151
-      @awards.push('ROWTON') if @points.map{|r| r["point"] }.inject(:+) >= 101
+      # @awards.push('HIGHTON') and return @awards  if @points.map{|r| r["point"] }.inject(:+) >= 151
+      # @awards.push('ROWTON') if @points.map{|r| r["point"] }.inject(:+) >= 101
 
       return @awards
     end
@@ -118,6 +127,7 @@ module Round
         return 0 if !effective.include?( point )
       end
 
+      return 25 if point == 50 and scale.nil?
       return point * 2 if scale == 'd'
       return point * 3 if scale == 't'
       return point
