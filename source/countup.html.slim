@@ -170,7 +170,7 @@
                   td
                     = game.score
                   td
-                    = game.score / 8
+                    = sprintf("%.02f", game.score / 8 .to_f )
                   td
                     - game.award.each do |k,v|
                       = sprintf("%s:%d ", k,v)
@@ -245,7 +245,7 @@
 - s_bull_rate = sprintf( "%.02f", s_bulls * 100 / ( recent.length * 8 * 3 ).to_f )
 
 / 日ごと
-- by_date = data.darts.group_by{ |r| r.date }
+- by_date = data.darts.select{|r| r.game == 'countup' }.group_by{ |r| r.date }
 - results_by_date = {}
 - by_date.each do |k,v|
   - bulls_by_date = v.map{ |r| r.award }.inject(0){ |sum,r| n = r["D-BULL"]||0; sum + n } + v.map{ |r| r.award }.inject(0){ |sum,r| n = r["S-BULL"]||0; sum + n }
