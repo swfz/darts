@@ -12,5 +12,6 @@ p 'Start!!'
 game.start
 game.update_score( game.score )
 game.write_data
+
 puts h.color("Total Score: %d"%(game.score), :red )
 

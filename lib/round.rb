@@ -2,7 +2,7 @@ require 'date'
 require 'tapp'
 
 module Round
-  class Countup
+  class Base
     def initialize(points_str, current_round)
       @points = []
       @awards = []
@@ -21,7 +21,16 @@ module Round
     # { area => 50, scale => nil, point => 50 } SBULL
     # { area => 19, scale => nil, point => 19 } Single 19
 
-    def get_awards
+    def score
+      return @points.map{|r| r["point"]}.inject(:+)
+    end
+  end
+
+  class Countup < Base
+    def initialize(points_str, current_round)
+      super
+    end
+    def awards
       @points.each{|p|
         @awards.push('D-BULL') if p["area"].to_i == 50 and p["scale"] == 'd'
         @awards.push('S-BULL') if p["area"].to_i == 50 and p["scale"].nil?
@@ -38,10 +47,6 @@ module Round
       return @awards
     end
 
-    def round_score
-      return @points.map{|r| r["point"]}.inject(:+)
-    end
-
     private
     def get_point(point_scale)
       # singleでもdoubleでもBULLは50
@@ -52,6 +57,5 @@ module Round
     end
   end
 end
-
 
 
