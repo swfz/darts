@@ -7,7 +7,70 @@
           | detail data
   .clearfix
   .row.tile_count
-
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          i.fa.fa-pie-chart
+          |  High Score
+        .count
+          = data.darts.select{ |r| r.game == 'cricketcountup' }.max_by { |r| r.score }.score
+        span.count_bottom
+          i.blue
+            = data.darts.select{ |r| r.game == 'cricketcountup' }.max_by { |r| r.score }.date
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          | Average Score
+        .count
+          - recent = data.darts.reverse.take(30).select { |r| r.game == 'cricketcountup' }
+          = recent.map{ |r| r.score }.inject(:+) / recent.length
+        span.sparkline_one[style="height: 160px; width: 200px;"]
+        canvas[width="160" height="60" style="display: inline-block; vertical-align: top; width: 160px; height: 30px;"]
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          i.fa.fa-pie-chart
+          | Stats
+        .count
+          - recent = data.darts.reverse.take(30).select { |r| r.game == 'cricketcountup' }
+          - t_stats = recent.map{ |r| r.stats }.inject(:+) / recent.length .to_f
+          = sprintf("%.02f", t_stats )
+          / 前日との差
+          - today = Time.now.strftime("%Y-%m-%d")
+          - until_yesterday = data.darts.select{ |r| r.date != today }.reverse.take(30).select{ |r| r.game == 'cricketcountup' }
+          - y_stats = until_yesterday.map{ |r| r.stats }.inject(:+) / until_yesterday.length .to_f
+        span.count_bottom
+        - if t_stats - y_stats < 0
+          i.red
+            = sprintf("%.02f", t_stats - y_stats )
+        - else
+          i.blue
+            | +
+            = sprintf("%.02f", t_stats - y_stats )
+        br
+        span.count_bottom
+          i.blue
+            | Recent 30 games Stats
+    .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
+      .left
+      .right
+        span.count_top
+          i.fa.fa-pie-chart
+          |  Triple Rate
+        .count
+          - triples = recent.map{ |r| r.award }.inject(0){ |sum,r| n = r["TRIPLE"]||0; sum + n }
+          = sprintf( "%.02f", triples * 100 / ( recent.length * 8 * 3 ).to_f )
+          |%
+        span.count_bottom
+          i.blue
+            | recent 30 games
+        p.count_bottom
+          i.blue
+            = triples
+            |  hits
   .row
     .col-md-12.col-sm-12.col-xs-12
       .x_panel
