@@ -2,6 +2,44 @@
 title: Dashboard
 ---
 
+- require 'bigdecimal'
+- require 'bigdecimal/util'
+- require 'tapp'
+
+- countup = data.darts.select{ |r| r.game == 'countup' }
+- cricketcountup = data.darts.select{ |r| r.game == 'cricketcountup' }
+/ histgram
+- cu_by_date  = countup.group_by{ |r| r.date }
+- ccu_by_date = cricketcountup.group_by{ |r| r.date }
+- stats_xaxis = ( cu_by_date.keys + ccu_by_date.keys ).uniq
+- stats_cu  = []
+- stats_ccu = []
+- stats_xaxis.each do |date|
+  - stats_cu.push( cu_by_date[date] ? get_stats( cu_by_date[date] ) : 0 )
+  - stats_ccu.push( ccu_by_date[date] ? get_stats( ccu_by_date[date] ) : 0 )
+
+- recent = data.darts.reverse.take(30)
+- recent_cu  = recent.select{ |r| r.game == 'countup' }
+- recent_ccu = recent.select{ |r| r.game == 'cricketcountup' }
+/前日まで
+- today = Time.now.strftime("%Y-%m-%d")
+- old = data.darts.select{|r| r.date != today }.reverse.take(30)
+- old_cu  = old.select{ |r| r.game == 'countup' }
+- old_ccu = old.select{ |r| r.game == 'cricketcountup' }
+
+- recent_cu_stats  = get_stats( recent_cu )
+- recent_ccu_stats = get_stats( recent_ccu )
+- old_cu_stats  = get_stats( old_cu )
+- old_ccu_stats = get_stats( old_ccu )
+
+- recent_cu_rating  = get_zeroone_rating(recent_cu_stats)
+- recent_ccu_rating = get_cricket_rating(recent_ccu_stats)
+- old_cu_rating  = get_zeroone_rating(old_cu_stats)
+- old_ccu_rating = get_cricket_rating(old_ccu_stats)
+
+- recent_practice_rating = ( recent_cu_rating + recent_ccu_rating ) / 2
+- old_practice_rating = ( old_cu_rating + old_ccu_rating ) / 2
+
 .right_col[role="main"]
   div
     .page-title
@@ -11,6 +49,126 @@ title: Dashboard
           small
             |  darts practice in house result.
     .clearfix
+    .row.tile_count
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-bullseye
+            | PracticeRating
+          .count
+            | #{get_flight( recent_practice_rating )}(#{to_f2( recent_practice_rating )})
+          span.count_bottom
+          - diff = recent_practice_rating - old_practice_rating
+          - if diff < 0
+            i.red
+              = diff
+          - else
+            i.blue
+              | +
+              = diff
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-bullseye
+            |  Rating
+            br
+            | (Countup)
+          .count
+            | #{get_flight( recent_cu_rating )} (#{to_f2( recent_cu_rating )})
+          span.count_bottom
+          - diff = recent_cu_rating - old_cu_rating
+          - if diff < 0
+            i.red
+              = diff
+          - else
+            i.blue
+              | +
+              = diff
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-pie-chart
+            | Rating
+            br
+            | (CricketCountup)
+          .count
+            | #{get_flight( recent_ccu_rating )} (#{to_f2( recent_ccu_rating )})
+          span.count_bottom
+          - diff = recent_ccu_rating - old_ccu_rating
+          - if diff < 0
+            i.red
+              = diff
+          - else
+            i.blue
+              | +
+              = diff
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-bullseye
+            |  Stats
+            br
+            | (Countup)
+          .count
+            = to_f2( recent_cu_stats )
+          span.count_bottom
+          - diff = recent_cu_stats - old_cu_stats
+          - if diff < 0
+            i.red
+              = diff
+          - else
+            i.blue
+              | +
+              = diff
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-pie-chart
+            |  Stats
+            br
+            | (CricketCountup)
+          .count
+            = to_f2( recent_ccu_stats )
+          span.count_bottom
+          - diff = recent_ccu_stats - old_ccu_stats
+          - if diff < 0
+            i.red
+              = diff
+          - else
+            i.blue
+              | +
+              = diff
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-bullseye
+            |  High Score
+            br
+            | (Countup)
+          .count
+            = countup.max_by { |r| r.score }.score
+          span.count_bottom
+            i.blue
+              = countup.max_by { |r| r.score }.date
+      .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
+        .right
+          span.count_top
+            i.fa.fa-pie-chart
+            |  High Score
+            br
+            | (CricketCountup)
+          .count
+            = cricketcountup.max_by { |r| r.score }.score
+          span.count_bottom
+            i.blue
+              = cricketcountup.max_by { |r| r.score }.date
+    .row
+      .col-md-6.col-sm-6.col-xs-12
+        .x_panel
+          .x_title
+            h2
+              | Award
+            #mainb[style="height:350px;"]
     .row
       .col-md-6.col-sm-6.col-xs-12
         .x_panel
@@ -43,7 +201,6 @@ title: Dashboard
             - r.each do |k,v|
               - all_awards[k] ||= 0
               - all_awards[k] += v
-
           .x_content
             table.table
               thead
@@ -60,4 +217,69 @@ title: Dashboard
                   td
                     = v
 
-
+script[src="/javascripts/echarts-all.js"]
+script[src="/javascripts/green.js"]
+script
+  |  var myChart9 = echarts.init(document.getElementById('mainb'), theme);
+  |  myChart9.setOption({
+  |    title: {
+  |      x: 'center',
+  |      y: 'top',
+  |      padding: [0, 0, 20, 0],
+  |      text: 'Stats Histgram',
+  |      textStyle: {
+  |        fontSize: 15,
+  |        fontWeight: 'normal'
+  |      }
+  |    },
+  |    tooltip: {
+  |      trigger: 'axis'
+  |    },
+  |    toolbox: {
+  |      show: true,
+  |      feature: {
+  |        dataView: {
+  |          show: false,
+  |          readOnly: false
+  |        },
+  |        restore: {
+  |          show: false
+  |        },
+  |        saveAsImage: {
+  |          show: false
+  |        }
+  |      }
+  |    },
+  |    calculable: true,
+  |    legend: {
+  |      data: ['Countup', 'CricketCountup'],
+  |      y: 'bottom'
+  |    },
+  |    xAxis: [{
+  |      type: 'category',
+  |      data: #{stats_xaxis}
+  |    }],
+  |    yAxis: [{
+  |      type: 'value',
+  |      name: 'Countup',
+  |      axisLabel: {
+  |        formatter: '{value}'
+  |      }
+  |    }, {
+  |      type: 'value',
+  |      name: 'CricketCountup',
+  |      axisLabel: {
+  |        formatter: '{value}'
+  |      }
+  |    }],
+  |    series: [{
+  |      name: 'Countup',
+  |      type: 'line',
+  |      data: #{stats_cu}
+  |    }, {
+  |      name: 'CricketCountup',
+  |      type: 'line',
+  |      yAxisIndex: 1,
+  |      data: #{stats_ccu}
+  |    }]
+  |  });

@@ -1,4 +1,15 @@
 require 'slim'
+# require 'middleman-gh-pages'
+require 'helpers/darts_helpers'
+
+helpers CricketRating
+helpers ZerooneRating
+helpers Stats
+helpers Flight
+helpers FormatFloat
+
+# set :less
+# set :fonts_dir,  "fonts/less"
 
 ###
 # Page options, layouts, aliases and proxies
@@ -49,3 +60,7 @@ end
 #   deploy.deploy_method = :git
 #   deploy.branch = 'gh-pages'
 # end
+
+
+
+

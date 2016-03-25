@@ -18,4 +18,7 @@ gem 'less'
 gem 'tapp'
 gem 'highline'
 gem 'therubyracer'
+gem 'middleman-gh-pages'
+gem 'less'
+gem 'font-awesome-middleman'
 # gem 'middleman-deploy', "~> 1.0"

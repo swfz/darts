@@ -45,6 +45,8 @@ GEM
     fastimage (1.8.1)
       addressable (~> 2.3, >= 2.3.5)
     ffi (1.9.10)
+    font-awesome-middleman (4.2.1)
+      middleman-core (>= 3.0.0)
     haml (4.0.7)
       tilt
     hamster (3.0.0)
@@ -95,6 +97,8 @@ GEM
       sass (>= 3.4)
       tilt (~> 1.4.1)
       uglifier (~> 2.6)
+    middleman-gh-pages (0.3.0)
+      rake (> 0.9.3)
     middleman-livereload (3.4.6)
       em-websocket (~> 0.5.1)
       middleman-core (>= 3.3)
@@ -119,6 +123,7 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rake (11.1.1)
     rb-fsevent (0.9.7)
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
@@ -148,10 +153,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  font-awesome-middleman
   highline
   less
   middleman (>= 4.0.0.rc.1)
   middleman-compass (>= 4.0.0.rc.1)
+  middleman-gh-pages
   middleman-livereload
   slim (>= 3.0)
   tapp
