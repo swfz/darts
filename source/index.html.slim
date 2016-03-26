@@ -58,14 +58,7 @@ title: Dashboard
           .count
             | #{get_flight( recent_practice_rating )}(#{to_f2( recent_practice_rating )})
           span.count_bottom
-          - diff = recent_practice_rating - old_practice_rating
-          - if diff < 0
-            i.red
-              = diff
-          - else
-            i.blue
-              | +
-              = diff
+          = partial 'diff', locals: { new: recent_practice_rating, old: old_practice_rating }
       .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
         .right
           span.count_top
@@ -76,14 +69,7 @@ title: Dashboard
           .count
             | #{get_flight( recent_cu_rating )} (#{to_f2( recent_cu_rating )})
           span.count_bottom
-          - diff = recent_cu_rating - old_cu_rating
-          - if diff < 0
-            i.red
-              = diff
-          - else
-            i.blue
-              | +
-              = diff
+          = partial 'diff', locals: { new: recent_cu_rating, old: old_cu_rating }
       .animated.flipInY.col-md-2.col-sm-4.col-xs-4.tile_stats_count
         .right
           span.count_top
@@ -94,14 +80,7 @@ title: Dashboard
           .count
             | #{get_flight( recent_ccu_rating )} (#{to_f2( recent_ccu_rating )})
           span.count_bottom
-          - diff = recent_ccu_rating - old_ccu_rating
-          - if diff < 0
-            i.red
-              = diff
-          - else
-            i.blue
-              | +
-              = diff
+          = partial 'diff', locals: { new: recent_ccu_rating, old: old_ccu_rating }
       .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
         .right
           span.count_top
@@ -112,14 +91,7 @@ title: Dashboard
           .count
             = to_f2( recent_cu_stats )
           span.count_bottom
-          - diff = recent_cu_stats - old_cu_stats
-          - if diff < 0
-            i.red
-              = diff
-          - else
-            i.blue
-              | +
-              = diff
+          = partial 'diff', locals: { new: recent_cu_stats, old: old_cu_stats }
       .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
         .right
           span.count_top
@@ -130,14 +102,7 @@ title: Dashboard
           .count
             = to_f2( recent_ccu_stats )
           span.count_bottom
-          - diff = recent_ccu_stats - old_ccu_stats
-          - if diff < 0
-            i.red
-              = diff
-          - else
-            i.blue
-              | +
-              = diff
+          = partial 'diff', locals: { new: recent_ccu_stats, old: old_ccu_stats }
       .animated.flipInY.col-md-1.col-sm-4.col-xs-4.tile_stats_count
         .right
           span.count_top
@@ -167,7 +132,7 @@ title: Dashboard
         .x_panel
           .x_title
             h2
-              | Award
+              | Stats
             #mainb[style="height:350px;"]
     .row
       .col-md-9.col-sm-6.col-xs-12

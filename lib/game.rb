@@ -14,8 +14,8 @@ class DataFile
 
   def write(file,json)
     @datas.push(json)
-    open(file, 'w') do |io|
-      JSON.dump(@datas, io)
+    File.open(file, 'w') do |f|
+      f.puts( JSON.pretty_generate(@datas, options = nil) )
     end
   end
 
