@@ -21,4 +21,10 @@ data.each{|r|
 
 puts JSON.pretty_generate(data, options = nil)
 
+outfile = 'data/darts2.json'
+
+File.open(outfile, 'w') do |file|
+  file.puts( JSON.pretty_generate(data, options = nil) )
+end
+
 

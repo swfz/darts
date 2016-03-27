@@ -1,15 +1,8 @@
 require 'slim'
-# require 'middleman-gh-pages'
-require 'helpers/darts_helpers'
+require 'middleman-gh-pages'
 
-helpers CricketRating
-helpers ZerooneRating
-helpers Stats
-helpers Flight
-helpers FormatFloat
-
-# set :less
-# set :fonts_dir,  "fonts/less"
+set :less
+set :fonts_dir,  "fonts/less"
 
 ###
 # Page options, layouts, aliases and proxies
@@ -32,6 +25,13 @@ page '/*.txt', layout: false
 ###
 # Helpers
 ###
+require 'helpers/darts_helpers'
+
+helpers CricketRating
+helpers ZerooneRating
+helpers Stats
+helpers Flight
+helpers FormatFloat
 
 # Reload the browser automatically whenever files change
 configure :development do
@@ -49,6 +49,8 @@ end
 # Build-specific configuration
 configure :build do
   activate :directory_indexes
+  # active   :relative_assets
+  activate :asset_host, :host => "/darts"
   # Minify CSS on build
   # activate :minify_css
 

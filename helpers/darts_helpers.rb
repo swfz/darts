@@ -1,3 +1,6 @@
+require 'bigdecimal/util'
+require 'bigdecimal'
+
 module ZerooneRating
   def get_zeroone_rating(stats)
     if stats < 40
@@ -40,13 +43,13 @@ module Flight
     case rating
     when 1..3.99
       "C"
-    when 4,5.99
+    when 4..5.99
       "CC"
-    when 6,7.99
+    when 6..7.99
       "B"
-    when 8,9.99
+    when 8..9.99
       "BB"
-    when 10..12
+    when 10..12.99
       "A"
     end
   end
