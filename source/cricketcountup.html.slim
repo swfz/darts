@@ -47,13 +47,7 @@ title: CricketCountUp
           - until_yesterday = data.darts.select{ |r| r.date != today }.reverse.take(30).select{ |r| r.game == 'cricketcountup' }
           - y_stats = until_yesterday.map{ |r| r.stats }.inject(:+) / until_yesterday.length .to_f
         span.count_bottom
-        - if t_stats - y_stats < 0
-          i.red
-            = sprintf("%.02f", t_stats - y_stats )
-        - else
-          i.blue
-            | +
-            = sprintf("%.02f", t_stats - y_stats )
+        = partial 'diff', locals: { new: t_stats, old: y_stats }
         br
         span.count_bottom
           i.blue
@@ -75,6 +69,13 @@ title: CricketCountUp
           i.blue
             = triples
             |  hits
+  .row
+    .col-md-8.col-sm-6.col-xs-12
+      .x_panel
+        .x_title
+          h2
+            | Average, Triple Rate
+          #mainb[style="height:350px;"]
   .row
     .col-md-12.col-sm-12.col-xs-12
       .x_panel
@@ -127,20 +128,85 @@ title: CricketCountUp
                     - game.award.each do |k,v|
                       = sprintf("%s:%d ", k,v)
 
-/
-  HighScore
-  AverageScore
-  Stats
-  Triple Rate
+/ 日ごと
+- by_date = data.darts.select{|r| r.game == 'cricketcountup' }.group_by{ |r| r.date }
+- graph_by_date = {}
+- by_date.keys.each do |date|
+  - triples = by_date[date].map{ |r| r.award }.inject(0){ |sum,r| n = r["TRIPLE"]||0; sum + n }
+  - graph_by_date["avg"] ||= []
+  - graph_by_date["avg"].push( by_date[date].inject(0){|sum,r| sum + r.score } / by_date[date].length )
+  - graph_by_date["max"] ||= []
+  - graph_by_date["max"].push( by_date[date].max_by{|r| r.score }.score )
+  - graph_by_date["rate"] ||= []
+  - graph_by_date["rate"].push( to_f2( triples * 100 / ( by_date[date].length * 8 * 3 ).to_f ) )
 
-/
-  histgram
-    Stats
-    Triple Rate
-    average score
-/
-  detail
-    raw data 10
-
-
-
+script[src="/javascripts/echarts-all.js"]
+script[src="/javascripts/green.js"]
+script
+  |  var myChart9 = echarts.init(document.getElementById('mainb'), theme);
+  |  myChart9.setOption({
+  |    title: {
+  |      x: 'center',
+  |      y: 'top',
+  |      padding: [0, 0, 20, 0],
+  |      text: 'Stats Histgram',
+  |      textStyle: {
+  |        fontSize: 15,
+  |        fontWeight: 'normal'
+  |      }
+  |    },
+  |    tooltip: {
+  |      trigger: 'axis'
+  |    },
+  |    toolbox: {
+  |      show: true,
+  |      feature: {
+  |        dataView: {
+  |          show: false,
+  |          readOnly: false
+  |        },
+  |        restore: {
+  |          show: false
+  |        },
+  |        saveAsImage: {
+  |          show: false
+  |        }
+  |      }
+  |    },
+  |    calculable: true,
+  |    legend: {
+  |      data: ['HighScore', 'Average', 'TripleRate'],
+  |      y: 'bottom'
+  |    },
+  |    xAxis: [{
+  |      type: 'category',
+  |      data: #{by_date.keys}
+  |    }],
+  |    yAxis: [{
+  |      type: 'value',
+  |      name: 'Score',
+  |      axisLabel: {
+  |        formatter: '{value}'
+  |      }
+  |    }, {
+  |      type: 'value',
+  |      name: 'Rate',
+  |      axisLabel: {
+  |        formatter: '{value}'
+  |      }
+  |    }],
+  |    series: [{
+  |      name: 'Average',
+  |      type: 'line',
+  |      data: #{graph_by_date["avg"]}
+  |    }, {
+  |      name: 'HighScore',
+  |      type: 'line',
+  |      data: #{graph_by_date["max"]}
+  |    }, {
+  |      name: 'TripleRate',
+  |      type: 'line',
+  |      yAxisIndex: 1,
+  |      data: #{graph_by_date["rate"]}
+  |    }]
+  |  });
