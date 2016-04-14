@@ -50,7 +50,7 @@ end
 configure :build do
   activate :directory_indexes
   # active   :relative_assets
-  activate :asset_host, :host => "/darts"
+  # activate :asset_host, :host => "/darts"
   # Minify CSS on build
   # activate :minify_css
 
@@ -58,10 +58,6 @@ configure :build do
   # activate :minify_javascript
 end
 
-# activate :deploy do |deploy|
-#   deploy.deploy_method = :git
-#   deploy.branch = 'gh-pages'
-# end
 
 
 
