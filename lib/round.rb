@@ -95,7 +95,7 @@ module Round
       }
 
       @awards.push( sprintf("%d-Count", count ) ) if count > 4
-      @awards.push('THREEINABED') if @points.map{|r| r["area"] }.uniq.count == 1 and @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'}
+      @awards.push('THREEINABED') if @points.map{|r| r["area"] }.uniq.count == 1 and ( @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'} )
       @awards.push('WHITEHOURSE') and return @awards if @points.map{|r| r["area"] }.uniq.count == 3 and @points.all? {|p| p["scale"] == 't'} and @points.all? {|p| p["point"] > 0 }
 
       @awards.push('TON80') and return @awards    if @points.all? {|p| p["area"].to_i == 20 and p["scale"] == 't'}
@@ -132,6 +132,7 @@ module Round
       end
 
       return 25 if point == 50 and scale.nil?
+      return 50 if point == 50 and scale == 'd'
       return point * 2 if scale == 'd'
       return point * 3 if scale == 't'
       return point
