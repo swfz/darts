@@ -35,6 +35,7 @@ GEM
       sass (>= 3.2, < 3.5)
     concurrent-ruby (1.0.1)
     contracts (0.13.0)
+    diff-lcs (1.2.5)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
@@ -128,6 +129,19 @@ GEM
     rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     ref (2.0.0)
+    rspec (3.4.0)
+      rspec-core (~> 3.4.0)
+      rspec-expectations (~> 3.4.0)
+      rspec-mocks (~> 3.4.0)
+    rspec-core (3.4.4)
+      rspec-support (~> 3.4.0)
+    rspec-expectations (3.4.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-mocks (3.4.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.4.0)
+    rspec-support (3.4.1)
     sass (3.4.21)
     slim (3.0.6)
       temple (~> 0.7.3)
@@ -160,6 +174,7 @@ DEPENDENCIES
   middleman-compass (>= 4.0.0.rc.1)
   middleman-gh-pages
   middleman-livereload
+  rspec
   slim (>= 3.0)
   tapp
   therubyracer

@@ -14,6 +14,10 @@ module Round
         point = get_point(point_scale);
         @points.push( { "area" => point_scale[1], "scale" => point_scale[2], "point" => point } )
       }
+      short_length = 3 - @points.length
+      short_length.times do |n|
+        @points.push( { "area" => 0, "scale" => nil, "point" => 0 } )
+      end
       calc_awards
     end
     attr_accessor :awards, :stats_score
@@ -43,12 +47,12 @@ module Round
         @awards.push('D-BULL') if p["area"].to_i == 50 and p["scale"] == 'd'
         @awards.push('S-BULL') if p["area"].to_i == 50 and p["scale"].nil?
       }
+
+      @awards.push('THREEINTHEBLACK') and return @awards if @points.all? {|p| p["area"].to_i == 50 and p["scale"] == 'd'}
+      @awards.push('HATTRICK') and return @awards if @points.all? {|p| p["area"].to_i == 50 }
       # areaが全て同じ、かつ三投ともdoubleかtripleである
       @awards.push('THREEINABED') if @points.map{|r| r["area"] }.uniq.count == 1 and @points.all? {|p| p["scale"] == 't'} or @points.all? {|p| p["scale"] == 'd'}
-
       @awards.push('TON80') and return @awards    if @points.all? {|p| p["area"].to_i == 20 and p["scale"] == 't'}
-      @awards.push('THREEINTHEBLACK') if @points.all? {|p| p["area"].to_i == 50 and p["scale"] == 'd'}
-      @awards.push('HATTRICK') and return @awards if @points.all? {|p| p["area"].to_i == 50 }
       @awards.push('HIGHTON') and return @awards  if @points.map{|r| r["point"] }.inject(:+) >= 151
       @awards.push('ROWTON') if @points.map{|r| r["point"] }.inject(:+) >= 101
 
