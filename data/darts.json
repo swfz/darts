@@ -1414,5 +1414,75 @@
     "game": "cricketcountup",
     "score": 300,
     "stats": 2.0
+  },
+  {
+    "award": {
+      "S-BULL": 4
+    },
+    "date": "2016-04-20",
+    "game": "countup",
+    "score": 347,
+    "stats": 43.375
+  },
+  {
+    "award": {
+      "S-BULL": 1,
+      "ROWTON": 1
+    },
+    "date": "2016-04-20",
+    "game": "countup",
+    "score": 446,
+    "stats": 55.75
+  },
+  {
+    "award": {
+      "S-BULL": 3,
+      "ROWTON": 1
+    },
+    "date": "2016-04-20",
+    "game": "countup",
+    "score": 424,
+    "stats": 53.0
+  },
+  {
+    "award": {
+      "D-BULL": 1,
+      "S-BULL": 2
+    },
+    "date": "2016-04-20",
+    "game": "countup",
+    "score": 441,
+    "stats": 55.125
+  },
+  {
+    "award": {
+      "S-BULL": 5,
+      "ROWTON": 3,
+      "HIGHTON": 1
+    },
+    "date": "2016-04-20",
+    "game": "countup",
+    "score": 655,
+    "stats": 81.875
+  },
+  {
+    "award": {
+      "TRIPLE": 1,
+      "DOUBLE": 2,
+      "5-Count": 1
+    },
+    "date": "2016-04-20",
+    "game": "cricketcountup",
+    "score": 269,
+    "stats": 1.875
+  },
+  {
+    "award": {
+      "TRIPLE": 2
+    },
+    "date": "2016-04-20",
+    "game": "cricketcountup",
+    "score": 224,
+    "stats": 1.625
   }
 ]
