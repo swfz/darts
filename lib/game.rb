@@ -63,7 +63,7 @@ class Base
     @game_data["stats"] = self.calc_stats
   end
 
-  def piliup_score( round_score )
+  def pileup_score( round_score )
     @score += round_score
   end
 
@@ -98,7 +98,7 @@ class Base
       round = Round.const_get( self.classname.capitalize ).new( points_str, self.current_round )
 
       self.update_award( round.awards )
-      self.piliup_score( round.score )
+      self.pileup_score( round.score )
       self.incr_round
       self.stats_scores.push( round.get_stats_score )
 
