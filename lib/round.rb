@@ -3,8 +3,8 @@ require 'tapp'
 
 module Round
   class Base
-    def initialize(points_str, current_round)
-      @round       = current_round
+    def initialize(points_str, opts)
+      @round       = opts[:current_round]
       @points      = []
       @awards      = []
       points_str.split(" ").each{|point_str|
@@ -33,7 +33,7 @@ module Round
   end
 
   class Countup < Base
-    def initialize(points_str, current_round)
+    def initialize(points_str, opts)
       super
     end
 
@@ -72,7 +72,7 @@ module Round
   end
 
   class Cricketcountup < Base
-    def initialize(points_str, current_round)
+    def initialize(points_str, opts)
       super
     end
 
@@ -138,6 +138,60 @@ module Round
       return point
     end
   end
+
+  class Roundtheclock < Base
+    def initialize(points_str, opts)
+      @completed     = false
+      @can_proceed   = true
+      @target_number = opts[:target_number]
+      super
+    end
+    attr_accessor :can_proceed, :target_number, :completed
+
+    def get_stats_score
+      @points.select{|p| p["point"] > 0}.inject(0){ |result, p| p["scale"] == 't' ? result + 3 : p["scale"] == 'd' ? result + 2 : result + 1 }
+    end
+
+    private
+    def calc_awards
+      return @awards
+    end
+
+    def get_point(point_scale)
+      point = point_scale[1].to_i
+      scale = point_scale[2]
+
+      return 0 unless is_hit( point )
+      @completed = true if @target_number == 50
+
+      @can_proceed = false
+
+      case scale
+      when 't' then
+        @target_number += 3
+      when 'd' then
+        @target_number += 2
+      else
+        @target_number += 1
+      end
+
+      # 20の次はBULL
+      @target_number = 50 if @target_number > 20
+
+      puts "Next Target Number: #{@target_number}"
+
+      return 25 if point == 50 and scale.nil?
+      return 50 if point == 50 and scale == 'd'
+      return point * 2 if scale == 'd'
+      return point * 3 if scale == 't'
+      return point
+    end
+
+    def is_hit( point )
+      point == @target_number
+    end
+  end
+
 end
 
 

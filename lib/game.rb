@@ -40,8 +40,9 @@ class Base
     @stats_scores  = []
     @file_obj      = DataFile.new
     @game_data     = {}
+    @state         = {}
   end
-  attr_accessor :last_round, :current_round, :score, :file_obj, :game_data, :stats_scores
+  attr_accessor :last_round, :current_round, :score, :file_obj, :game_data, :stats_scores, :state
 
   def classname
     self.class.to_s.split('::').last.downcase
@@ -67,7 +68,7 @@ class Base
     @score += round_score
   end
 
-  def incr_round
+  def incr_round( round )
     @current_round += 1
   end
 
@@ -77,6 +78,13 @@ class Base
 
   def is_end
     return @current_round > @last_round
+  end
+
+  def calc_stats
+    @stats_scores.inject(:+) / @last_round .to_f
+  end
+
+  def update_state( round )
   end
 
   def before_input_print
@@ -95,13 +103,14 @@ class Base
   def start
     self.before_input_print
     while points_str = STDIN.gets
-      round = Round.const_get( self.classname.capitalize ).new( points_str, self.current_round )
+      round = Round.const_get( self.classname.capitalize ).new( points_str, @state )
 
       self.update_award( round.awards )
       self.pileup_score( round.score )
-      self.incr_round
+      self.incr_round( round )
       self.stats_scores.push( round.get_stats_score )
 
+      self.update_state( round )
       self.after_input_print( round.score, round.awards )
       break if self.is_end
       self.before_input_print
@@ -113,10 +122,6 @@ class Countup < Base
   def initialize
     super
     @last_round = 8
-  end
-
-  def calc_stats
-    @stats_scores.inject(:+) / @last_round .to_f
   end
 end
 
@@ -131,8 +136,34 @@ class Cricketcountup < Base
     puts "========== Target is %s!!"%(target[self.current_round])
     puts "Round%d"%([self.current_round])
   end
+end
 
-  def calc_stats
-    @stats_scores.inject(:+) / @last_round .to_f
+class Roundtheclock < Base
+  def initialize
+    super
+    @state = {:target_number => 1 }
+    @last_round = 4
+  end
+
+  def before_input_print
+    puts "========== Target is %s!!"%(@state[:target_number])
+    puts "Round%d"%([self.current_round])
+  end
+
+  def incr_round( round )
+    if round.can_proceed
+      @current_round += 1
+    end
+  end
+
+  def is_end
+    return @current_round > @last_round || @state[:completed]
+  end
+
+  def update_state( round )
+    @state = {
+      :target_number => round.target_number,
+      :completed     => round.completed
+    }
   end
 end

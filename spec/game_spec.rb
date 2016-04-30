@@ -24,7 +24,7 @@ shared_examples 'check round' do |exp|
 
     loop_count = exp[:last_round]
     ( 1..loop_count ).each{|n|
-      game.incr_round
+      game.incr_round( round )
     }
 
     expect( game.current_round ).to eq( exp[:last_round] + 1 )
@@ -139,6 +139,7 @@ describe Countup do
     end
 
     describe 'check round' do
+      let(:round) { Round::Countup.new( '1 1 1', {:current_round => 1 } ) }
       include_examples 'check round', { :last_round => 8 }
     end
 
@@ -219,6 +220,7 @@ describe Cricketcountup do
     end
 
     describe 'check round' do
+      let(:round) { Round::Countup.new( '1 1 1', {:current_round => 1 } ) }
       include_examples 'check round', { :last_round => 8 }
     end
 
