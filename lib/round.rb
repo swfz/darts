@@ -149,7 +149,8 @@ module Round
     attr_accessor :can_proceed, :target_number, :completed
 
     def get_stats_score
-      @points.select{|p| p["point"] > 0}.inject(0){ |result, p| p["scale"] == 't' ? result + 3 : p["scale"] == 'd' ? result + 2 : result + 1 }
+      # trhows count
+      3
     end
 
     private

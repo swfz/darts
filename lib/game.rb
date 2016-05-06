@@ -128,7 +128,12 @@ end
 class Cricketcountup < Base
   def initialize
     super
+    @state[:current_round] = @current_round
     @last_round = 8
+  end
+
+  def update_state( round )
+    @state[:current_round] = @current_round
   end
 
   def before_input_print
@@ -154,6 +159,10 @@ class Roundtheclock < Base
     if round.can_proceed
       @current_round += 1
     end
+  end
+
+  def calc_stats
+    @stats_scores.inject(:+)
   end
 
   def is_end
