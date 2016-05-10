@@ -1,0 +1,30 @@
+{
+  "zeroone": [
+    { "ppr": "0 - 39.99" , "rating": 1, "flight": "C" },
+    { "ppr": "40 - 44.99" , "rating": 2, "flight": "C" },
+    { "ppr": "45 - 49.99" , "rating": 3, "flight": "C" },
+    { "ppr": "50 - 54.99" , "rating": 4, "flight": "CC" },
+    { "ppr": "55 - 59.99" , "rating": 5, "flight": "CC" },
+    { "ppr": "60 - 64.99" , "rating": 6, "flight": "B" },
+    { "ppr": "65 - 69.99" , "rating": 7, "flight": "B" },
+    { "ppr": "70 - 74.99" , "rating": 8, "flight": "BB" },
+    { "ppr": "75 - 79.99" , "rating": 9, "flight": "BB" },
+    { "ppr": "80 - 84.99" , "rating": 10, "flight": "A" },
+    { "ppr": "85 - 89.99" , "rating": 11, "flight": "A" },
+    { "ppr": "90 - 94.99" , "rating": 12, "flight": "A" }
+  ],
+  "cricket": [
+    { "mpr": "0 - 1.29" , "rating": 1, "flight": "C" },
+    { "mpr": "1.30 - 1.49" , "rating": 2, "flight": "C" },
+    { "mpr": "1.50 - 1.69" , "rating": 3, "flight": "C" },
+    { "mpr": "1.70 - 1.89" , "rating": 4, "flight": "CC" },
+    { "mpr": "1.90 - 2.09" , "rating": 5, "flight": "CC" },
+    { "mpr": "2.10 - 2.29" , "rating": 6, "flight": "B" },
+    { "mpr": "2.30 - 2.49" , "rating": 7, "flight": "B" },
+    { "mpr": "2.50 - 2.69" , "rating": 8, "flight": "BB" },
+    { "mpr": "2.70 - 2.89" , "rating": 9, "flight": "BB" },
+    { "mpr": "2.90 - 3.09" , "rating": 10, "flight": "A" },
+    { "mpr": "3.10 - 3.29" , "rating": 11, "flight": "A" },
+    { "mpr": "3.30 - 3.49" , "rating": 12, "flight": "A" }
+  ]
+}

@@ -124,14 +124,92 @@ title: Dashboard
             i.blue
               = cricketcountup.max_by { |r| r.score }.date
     .row
-      .col-md-9.col-sm-6.col-xs-12
+      .col-md-8.col-sm-6.col-xs-12
         .x_panel
           .x_title
             h2
               | Stats
             #mainb[style="height:350px;"]
+      .col-md-4.col-sm-6.col-xs-12
+        .x_panel
+          .x_title
+            h2
+              i.fa.fa-align-left
+              |  Rating/Stats
+              small
+                | Sessions
+            ul.nav.navbar-right.panel_toolbox
+              li
+                a.collapse-link
+                  i.fa.fa-chevron-up
+              li.dropdown
+                a.dropdown-toggle[href="#" data-toggle="dropdown" role="button" aria-expanded="false"]
+                  i.fa.fa-wrench
+                ul.dropdown-menu[role="menu"]
+                  li
+                    a[href="#"]
+                      | Settings 1
+                  li
+                    a[href="#"]
+                      | Settings 2
+              li
+                a.close-link
+                  i.fa.fa-close
+            .clearfix
+          .x_content
+            #accordion1.accordion[role="tablist" aria-multiselectable="true"]
+              .panel
+                a#headingOne1.panel-heading[role="tab" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne"]
+
+                h4.panel-title
+                  | 01 Games Stats
+                #collapseOne1.panel-collapse.collapse.in[role="tabpanel" aria-labelledby="headingOne"]
+                  .panel-body
+                    table.table.table-striped
+                      thead
+                        tr
+                          th
+                            | PPR
+                          th
+                            | Rating
+                          th
+                            | Flight
+                      tbody
+                      - data.rating.zeroone.each do |row|
+                        tr
+                          th[scope="row"]
+                            = row["ppr"]
+                          td
+                            = row["rating"]
+                          td
+                            = row["flight"]
+              .panel
+                a#headingTwo1.panel-heading.collapsed[role="tab" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo1" aria-expanded="false" aria-controls="collapseTwo"]
+
+                h4.panel-title
+                  | Cricket Games Stats
+                #collapseTwo1.panel-collapse.collapse[role="tabpanel" aria-labelledby="headingTwo"]
+                  .panel-body
+                    table.table.table-striped
+                      thead
+                        tr
+                          th
+                            | PPR
+                          th
+                            | Rating
+                          th
+                            | Flight
+                      tbody
+                      - data.rating.cricket.each do |row|
+                        tr
+                          th[scope="row"]
+                            = row["mpr"]
+                          td
+                            = row["rating"]
+                          td
+                            = row["flight"]
     .row
-      .col-md-9.col-sm-6.col-xs-12
+      .col-md-8.col-sm-6.col-xs-12
         .x_panel
           .x_title
             h2
