@@ -1603,22 +1603,6 @@
   },
   {
     "award": {
-    },
-    "date": "2016-05-02",
-    "game": "roundtheclock",
-    "score": 291,
-    "stats": 24
-  },
-  {
-    "award": {
-    },
-    "date": "2016-05-07",
-    "game": "roundtheclock",
-    "score": 219,
-    "stats": 24
-  },
-  {
-    "award": {
       "S-BULL": 4
     },
     "date": "2016-05-07",
@@ -1683,14 +1667,6 @@
     "game": "countup",
     "score": 368,
     "stats": 46.0
-  },
-  {
-    "award": {
-    },
-    "date": "2016-05-10",
-    "game": "roundtheclock",
-    "score": 84,
-    "stats": 30
   },
   {
     "award": {

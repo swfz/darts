@@ -48,6 +48,10 @@ class Base
     self.class.to_s.split('::').last.downcase
   end
 
+  def detail
+    {}
+  end
+
   def update_award( awards )
 
     @game_data["award"] ||= {}
@@ -58,10 +62,11 @@ class Base
   end
 
   def update_game_data
-    @game_data["date"]  = Date.today.strftime("%Y-%m-%d")
-    @game_data["game"]  = self.classname
-    @game_data["score"] = @score
-    @game_data["stats"] = self.calc_stats
+    @game_data["date"]   = Date.today.strftime("%Y-%m-%d")
+    @game_data["game"]   = self.classname
+    @game_data["score"]  = @score
+    @game_data["stats"]  = self.calc_stats
+    @game_data["detail"] = self.detail
   end
 
   def pileup_score( round_score )
@@ -148,6 +153,13 @@ class Roundtheclock < Base
     super
     @state = {:target_number => 1 }
     @last_round = 4
+  end
+
+  def detail
+    {
+      :completed => @state[:completed],
+      :target    => @state[:target_number]
+    }
   end
 
   def before_input_print

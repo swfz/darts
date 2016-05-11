@@ -130,10 +130,11 @@ describe Countup do
         :stats_scores => [50,50,20,20,20,20,20,20],
         :score => 500,
         :exp => {
-          "date"  => "2016-04-25",
-          "stats" => 27.5,
-          "score" => 500,
-          "game"  => "countup",
+          "date"   => "2016-04-25",
+          "detail" => {},
+          "stats"  => 27.5,
+          "score"  => 500,
+          "game"   => "countup",
         }
       }
     end
@@ -211,10 +212,11 @@ describe Cricketcountup do
         :stats_scores => [3,3,2,2,3,4,2,2],
         :score => 400,
         :exp => {
-          "date"  => "2016-04-25",
-          "stats" => 2.625,
-          "score" => 400,
-          "game"  => "cricketcountup",
+          "date"   => "2016-04-25",
+          "detail" => {},
+          "stats"  => 2.625,
+          "score"  => 400,
+          "game"   => "cricketcountup",
         }
       }
     end
