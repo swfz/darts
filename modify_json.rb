@@ -27,4 +27,3 @@ File.open(outfile, 'w') do |file|
   file.puts( JSON.pretty_generate(data, options = nil) )
 end
 
-
