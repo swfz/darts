@@ -9,7 +9,7 @@ rubyの実践勉強とダーツのモチベーション維持のために作っ�
 - 起動
 
 ```
-ruby darts.rb [countup|cricketcountup]
+ruby darts.rb [countup|cricketcountup|roundtheclock]
 ```
 
 ![cli](cli.gif)
@@ -40,6 +40,5 @@ ruby darts.rb [countup|cricketcountup]
     - tooltipのstyle
 - クリケットの実装
 - 01の実装
-
 
 
