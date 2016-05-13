@@ -4,7 +4,6 @@ require 'tapp'
 require 'highline'
 require './lib/round.rb'
 
-
 class DataFile
   def initialize
     @data_file = 'data/darts.json'
