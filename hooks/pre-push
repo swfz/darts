@@ -21,7 +21,8 @@ is_commited() {
 
   for filename in "${filenames[@]}"
   do
-    count=$( git diff ${start_id}..${end_id} | grep -c ${filename} )
+    count=$( git log ${start_id}..${end_id} | grep -c ${filename} )
+    echo "${filename} : ${count}" 1>&2
     [ "${count}" -gt 0 ] && echo 1 && return
   done
   echo 0
