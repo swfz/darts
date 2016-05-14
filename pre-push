@@ -1,0 +1,51 @@
+#!/bin/bash
+
+publish_files=("data/" "source")
+lib_file_prefix=("lib" "darts.rb" "helpers" "spec")
+
+publish() {
+  echo "rake publish --------------------"
+  rake publish
+}
+
+spec() {
+  echo "rspec spec/* --------------------"
+  rspec spec/*
+  [ "$?" -ne 0 ] && echo "Test Failed!!" && exit 1
+}
+
+is_commited() {
+  start_id=$1
+  end_id=$2
+  filenames=(${@:3})
+
+  for filename in "${filenames[@]}"
+  do
+    count=$( git diff ${start_id}..${end_id} | grep -c ${filename} )
+    [ "${count}" -gt 0 ] && echo 1 && return
+  done
+  echo 0
+}
+
+echo "${0##*/} ********************************************"
+
+while read local_ref local_sha remote_ref remote_sha; do
+  # master へのpushのみ適用
+  [ "$local_ref" == "refs/heads/master" ] && [ "$remote_ref" == "refs/heads/master" ] || exit 0
+  if [ -n "${remote_sha}" ] && [ -n "${local_sha}" ]; then
+    # lib 以下に更新があるか（テスト実行対象か）
+    commited_lib=$( is_commited ${remote_sha} ${local_sha} ${lib_file_prefix[@]} )
+    echo "lib commited: ${commited_lib}"
+    [ "${commited_lib}" == 1 ] && spec
+
+    # source以下に更新があるか（midleman deployの対象か）
+    commited_publish=$( is_commited ${remote_sha} ${local_sha} ${publish_files[@]} )
+    echo "source commited: ${commited_publish}"
+    [ "${commited_publish}" == 1 ] && publish
+  fi
+done
+
+echo "${0##*/} ********************************************"
+exit 0
+
+

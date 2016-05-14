@@ -35,6 +35,14 @@ ruby darts.rb [countup|cricketcountup|roundtheclock]
 ]
 ```
 
+## setup
+
+pre-pushスクリプトの設置
+
+```
+ln -s pre-push .git/hooks/pre-push
+```
+
 # TODO
 - スコアの可視化
     - tooltipのstyle
