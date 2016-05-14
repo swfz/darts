@@ -40,7 +40,8 @@ ruby darts.rb [countup|cricketcountup|roundtheclock]
 pre-pushスクリプトの設置
 
 ```
-ln -s pre-push .git/hooks/pre-push
+rm -r .git/hooks
+ln -s $(pwd)/hooks $(pwd)/.git/hooks
 ```
 
 # TODO
