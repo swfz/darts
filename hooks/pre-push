@@ -3,6 +3,10 @@
 publish_files=("data/" "source")
 lib_file_prefix=("lib" "darts.rb" "helpers" "spec")
 
+echo_line() {
+  echo "${0##*/} ********************************************"
+}
+
 publish() {
   echo "rake publish --------------------"
   rake publish
@@ -11,7 +15,7 @@ publish() {
 spec() {
   echo "rspec spec/* --------------------"
   rspec spec/*
-  [ "$?" -ne 0 ] && echo "Test Failed!!" && exit 1
+  [ "$?" -ne 0 ] && echo "Test Failed!!" && echo_line && exit 1
 }
 
 is_commited() {
@@ -28,11 +32,11 @@ is_commited() {
   echo 0
 }
 
-echo "${0##*/} ********************************************"
+echo_line
 
 while read local_ref local_sha remote_ref remote_sha; do
   # master へのpushのみ適用
-  [ "$local_ref" == "refs/heads/master" ] && [ "$remote_ref" == "refs/heads/master" ] || exit 0
+  [ "$local_ref" == "refs/heads/master" ] && [ "$remote_ref" == "refs/heads/master" ] || echo_line && exit 0
   if [ -n "${remote_sha}" ] && [ -n "${local_sha}" ]; then
     # lib 以下に更新があるか（テスト実行対象か）
     commited_lib=$( is_commited ${remote_sha} ${local_sha} ${lib_file_prefix[@]} )
@@ -46,7 +50,7 @@ while read local_ref local_sha remote_ref remote_sha; do
   fi
 done
 
-echo "${0##*/} ********************************************"
+echo_line
 exit 0
 
 
