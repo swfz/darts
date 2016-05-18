@@ -25,7 +25,7 @@ is_commited() {
 
   for filename in "${filenames[@]}"
   do
-    count=$( git log ${start_id}..${end_id} | grep -c ${filename} )
+    count=$( git log --name-only ${start_id}..${end_id} | grep -c ${filename} )
     echo "${filename} : ${count}" 1>&2
     [ "${count}" -gt 0 ] && echo 1 && return
   done
@@ -35,6 +35,10 @@ is_commited() {
 echo_line
 
 while read local_ref local_sha remote_ref remote_sha; do
+  echo $local_ref
+  echo $local_sha
+  echo $remote_ref
+  echo $remote_sha
   # master へのpushのみ適用
   [ "$local_ref" == "refs/heads/master" ] && [ "$remote_ref" == "refs/heads/master" ] || echo_line && exit 0
   if [ -n "${remote_sha}" ] && [ -n "${local_sha}" ]; then
