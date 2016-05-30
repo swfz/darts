@@ -40,17 +40,18 @@ while read local_ref local_sha remote_ref remote_sha; do
   echo $remote_ref
   echo $remote_sha
   # master へのpushのみ適用
-  [ "$local_ref" == "refs/heads/master" ] && [ "$remote_ref" == "refs/heads/master" ] || echo_line && exit 0
-  if [ -n "${remote_sha}" ] && [ -n "${local_sha}" ]; then
-    # lib 以下に更新があるか（テスト実行対象か）
-    commited_lib=$( is_commited ${remote_sha} ${local_sha} ${lib_file_prefix[@]} )
-    echo "lib commited: ${commited_lib}"
-    [ "${commited_lib}" == 1 ] && spec
+  if [ "$local_ref" == "refs/heads/master" ] && [ "$remote_ref" == "refs/heads/master" ]; then
+    if [ -n "${remote_sha}" ] && [ -n "${local_sha}" ]; then
+      # lib 以下に更新があるか（テスト実行対象か）
+      commited_lib=$( is_commited ${remote_sha} ${local_sha} ${lib_file_prefix[@]} )
+      echo "lib commited: ${commited_lib}"
+      [ "${commited_lib}" == 1 ] && spec
 
-    # source以下に更新があるか（midleman deployの対象か）
-    commited_publish=$( is_commited ${remote_sha} ${local_sha} ${publish_files[@]} )
-    echo "source commited: ${commited_publish}"
-    [ "${commited_publish}" == 1 ] && publish
+      # source以下に更新があるか（midleman deployの対象か）
+      commited_publish=$( is_commited ${remote_sha} ${local_sha} ${publish_files[@]} )
+      echo "source commited: ${commited_publish}"
+      [ "${commited_publish}" == 1 ] && publish
+    fi
   fi
   echo_line
 done
