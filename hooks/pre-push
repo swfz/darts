@@ -52,9 +52,9 @@ while read local_ref local_sha remote_ref remote_sha; do
     echo "source commited: ${commited_publish}"
     [ "${commited_publish}" == 1 ] && publish
   fi
+  echo_line
 done
 
-echo_line
 exit 0
 
 
